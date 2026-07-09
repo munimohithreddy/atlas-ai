@@ -1,13 +1,29 @@
-﻿from fastapi import FastAPI
+﻿import logging
 
+from fastapi import FastAPI
+
+from app.api.v1.router import api_router
 from app.core.config import settings
-from app.database.session import check_database_connection
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+)
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title=settings.app_name,
-    description="AI-powered publishing and affiliate marketing platform",
+    description="AI-powered business growth and publishing platform",
     version="0.1.0",
 )
+
+app.include_router(api_router, prefix="/api/v1")
+
+
+@app.on_event("startup")
+def startup_event():
+    logger.info("Atlas AI backend started")
 
 
 @app.get("/")
@@ -17,14 +33,4 @@ def root():
         "environment": settings.app_env,
         "status": "running",
         "version": "0.1.0",
-    }
-
-
-@app.get("/health")
-def health():
-    database_ok = check_database_connection()
-
-    return {
-        "status": "healthy" if database_ok else "degraded",
-        "database": "connected" if database_ok else "disconnected",
     }

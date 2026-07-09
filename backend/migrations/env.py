@@ -1,15 +1,17 @@
-﻿from logging.config import fileConfig
 from pathlib import Path
+from logging.config import fileConfig
 import sys
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
-sys.path.append(str(BACKEND_DIR))
+if str(BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(BACKEND_DIR))
 
 from app.core.config import settings
 from app.database.base import Base
+from app.models.opportunity import Opportunity  # noqa: F401
 from app.models.site import Site  # noqa: F401
 
 config = context.config
