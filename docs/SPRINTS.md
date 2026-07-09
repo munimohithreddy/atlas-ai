@@ -1,5 +1,49 @@
 # Atlas AI Sprints
 
+## Sprint 007: OpenAI Research Synthesizer v1
+
+Goal: synthesize submitted evidence into a clearer opportunity analysis while keeping deterministic fallback behavior.
+
+Scope:
+
+- Add optional OpenAI configuration through `OPENAI_API_KEY`.
+- Add the OpenAI Python dependency.
+- Add `backend/app/integrations/openai/` with an OpenAI client wrapper.
+- Add a research synthesis service that accepts topic, niche, evidence, and calculated scores.
+- Store AI analysis fields on `Opportunity`.
+- Add an Alembic migration for AI analysis columns.
+- Include AI analysis fields in `GET /api/v1/opportunities/{opportunity_id}`.
+- Keep the system working without `OPENAI_API_KEY` by using deterministic fallback analysis.
+- Add tests with a mocked OpenAI response.
+
+Out of scope:
+
+- Scraping.
+- External search APIs.
+- OpenAI-powered evidence gathering.
+
+## Sprint 006: Real Research Provider v1
+
+Goal: add the first real research-provider boundary while keeping the mock provider available for tests and local development.
+
+Scope:
+
+- Add `backend/app/integrations/search/` for search-style research provider abstractions.
+- Add a `SearchResearchProvider` interface.
+- Add a manual evidence provider that accepts researched evidence submitted through the API.
+- Add evidence scoring that converts submitted evidence into opportunity scores.
+- Add `POST /api/v1/opportunities/evaluate-with-evidence`.
+- Store the resulting opportunity and submitted evidence rows.
+- Keep `POST /api/v1/opportunities/evaluate` working with the mock provider.
+- Add tests for manual evidence scoring, the manual provider, endpoint persistence, and route registration.
+- Update API, sprint, changelog, and decision documentation.
+
+Out of scope:
+
+- OpenAI integrations.
+- Scraping.
+- Google Trends, Reddit, Pinterest, or affiliate network integrations.
+
 ## Sprint 005: Evidence and Decision Logging
 
 Goal: store the evidence and research signals used to score every evaluated opportunity.

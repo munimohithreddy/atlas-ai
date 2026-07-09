@@ -1,7 +1,10 @@
 from dataclasses import dataclass
+from collections.abc import Sequence
 
+from app.integrations.search import ManualEvidenceSearchProvider, SearchResearchProvider
 from app.schemas.opportunity import OpportunityCreate, OpportunityEvidenceCreate
 from app.services.research.mock_provider import MockResearchProvider
+from app.services.research.signals import ResearchEvidenceItem
 
 
 @dataclass(frozen=True)
@@ -17,6 +20,54 @@ def build_opportunity_from_research(
 ) -> ResearchOpportunityEvaluation:
     research_provider = provider or MockResearchProvider()
     result = research_provider.research(topic=topic, niche=niche)
+    signals = result.signals
+
+    opportunity = OpportunityCreate(
+        topic=topic,
+        niche=niche,
+        demand_score=signals.demand,
+        competition_score=signals.competition,
+        buyer_intent_score=signals.buyer_intent,
+        affiliate_score=signals.affiliate_potential,
+        pinterest_score=signals.pinterest_potential,
+        seo_score=signals.seo_potential,
+    )
+    evidence = tuple(
+        OpportunityEvidenceCreate(
+            source=item.source,
+            signal_type=item.signal_type,
+            value=item.value,
+            summary=item.summary,
+            confidence_score=item.confidence_score,
+        )
+        for item in result.evidence
+    )
+
+    return ResearchOpportunityEvaluation(opportunity=opportunity, evidence=evidence)
+
+
+def build_opportunity_from_manual_evidence(
+    topic: str,
+    niche: str | None,
+    evidence_items: Sequence[OpportunityEvidenceCreate],
+    provider: SearchResearchProvider | None = None,
+) -> ResearchOpportunityEvaluation:
+    research_provider = provider or ManualEvidenceSearchProvider()
+    submitted_evidence = tuple(
+        ResearchEvidenceItem(
+            source=item.source,
+            signal_type=item.signal_type,
+            value=item.value,
+            summary=item.summary,
+            confidence_score=item.confidence_score,
+        )
+        for item in evidence_items
+    )
+    result = research_provider.research(
+        topic=topic,
+        niche=niche,
+        evidence_items=submitted_evidence,
+    )
     signals = result.signals
 
     opportunity = OpportunityCreate(

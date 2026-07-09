@@ -1,5 +1,41 @@
 # Atlas AI Decisions
 
+## Sprint 007: OpenAI Research Synthesizer v1
+
+### Use OpenAI only for synthesis, not research collection
+
+Sprint 007 uses OpenAI to turn submitted evidence and calculated scores into a clearer analysis. It does not scrape websites, call external search APIs, or gather evidence automatically.
+
+### Keep OpenAI optional at runtime
+
+If `OPENAI_API_KEY` is missing, the app returns deterministic fallback analysis instead of crashing. This keeps local development, tests, and non-OpenAI deployments working.
+
+### Store analysis on the opportunity
+
+The synthesized analysis is part of the decision record for an opportunity, so it lives on the `Opportunity` row and is returned by the detail endpoint with evidence.
+
+### Treat invalid AI output as unavailable
+
+If the OpenAI response is missing, non-JSON, or does not include the expected fields, Atlas falls back to deterministic analysis rather than returning partial or malformed data.
+
+## Sprint 006: Real Research Provider v1
+
+### Use manual evidence as the first non-mock research provider
+
+Atlas needs a provider boundary before external integrations. Manual evidence lets users submit researched facts from any source while Atlas handles scoring, persistence, and decision logging.
+
+### Keep search integrations abstract and non-scraping
+
+The search provider interface models a future web-search-style research source, but Sprint 006 does not scrape pages or call third-party APIs. This keeps the architecture ready without adding operational or compliance risk.
+
+### Score submitted evidence in the service layer
+
+The manual provider accepts evidence, while `services/research/evidence_scoring.py` converts it into opportunity score inputs. This follows the project rule that business logic belongs in services.
+
+### Default missing signals to neutral scores
+
+Submitted evidence may cover only some signal types. Missing signals default to `50`, a neutral midpoint, so partial evidence can still produce an opportunity while making gaps visible in stored evidence.
+
 ## Sprint 005: Evidence and Decision Logging
 
 ### Store evidence separately from opportunity scores

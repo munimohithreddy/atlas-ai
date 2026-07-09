@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session, selectinload
 from app.models.opportunity import Opportunity
 from app.models.opportunity_evidence import OpportunityEvidence
 from app.schemas.opportunity import OpportunityCreate, OpportunityEvidenceCreate
+from app.services.research.analysis import OpportunityAIAnalysis
 from app.services.opportunities.scoring import (
     build_reasoning,
     calculate_opportunity_score,
@@ -85,6 +86,23 @@ def get_opportunity(db: Session, opportunity_id: int) -> Opportunity | None:
         .filter(Opportunity.id == opportunity_id)
         .first()
     )
+
+
+def update_opportunity_analysis(
+    db: Session,
+    opportunity: Opportunity,
+    analysis: OpportunityAIAnalysis,
+) -> Opportunity:
+    opportunity.ai_executive_summary = analysis.executive_summary
+    opportunity.ai_key_strengths = analysis.key_strengths
+    opportunity.ai_key_risks = analysis.key_risks
+    opportunity.ai_recommendation_reason = analysis.recommendation_reason
+    opportunity.ai_suggested_next_actions = analysis.suggested_next_actions
+
+    db.add(opportunity)
+    db.commit()
+    db.refresh(opportunity)
+    return opportunity
 
 
 def list_opportunities(db: Session) -> list[Opportunity]:

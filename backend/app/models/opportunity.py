@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, Integer, String, Text
+from sqlalchemy import JSON, DateTime, Float, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
@@ -24,6 +24,15 @@ class Opportunity(Base):
     opportunity_score: Mapped[float] = mapped_column(Float, nullable=False)
     recommendation: Mapped[str] = mapped_column(String(50), nullable=False)
     reasoning: Mapped[str] = mapped_column(Text, nullable=False)
+
+    ai_executive_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    ai_key_strengths: Mapped[list[str] | None] = mapped_column(JSON, nullable=True)
+    ai_key_risks: Mapped[list[str] | None] = mapped_column(JSON, nullable=True)
+    ai_recommendation_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    ai_suggested_next_actions: Mapped[list[str] | None] = mapped_column(
+        JSON,
+        nullable=True,
+    )
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     evidence: Mapped[list["OpportunityEvidence"]] = relationship(

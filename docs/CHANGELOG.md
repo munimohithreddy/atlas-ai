@@ -1,5 +1,38 @@
 # Atlas AI Changelog
 
+## Sprint 007: OpenAI Research Synthesizer v1
+
+Added:
+
+- `OPENAI_API_KEY` in `.env.example`.
+- OpenAI Python dependency in backend requirements.
+- OpenAI integration wrapper under `backend/app/integrations/openai/`.
+- Opportunity analysis service with OpenAI-backed synthesis and deterministic fallback.
+- AI analysis columns on `Opportunity`.
+- Alembic migration for AI analysis fields.
+- AI analysis fields on opportunity detail responses.
+- Tests using a mocked OpenAI response.
+
+Changed:
+
+- `POST /api/v1/opportunities/evaluate-with-evidence` now stores AI/fallback analysis after calculating scores and evidence.
+
+## Sprint 006: Real Research Provider v1
+
+Added:
+
+- Search integration package under `backend/app/integrations/search/`.
+- `SearchResearchProvider` interface for search-style research providers.
+- Manual evidence provider for API-submitted research evidence.
+- Evidence scoring service that converts submitted evidence into opportunity score inputs.
+- `OpportunityEvaluateWithEvidenceRequest` schema.
+- `POST /api/v1/opportunities/evaluate-with-evidence` endpoint.
+- Backend tests for manual evidence scoring, manual provider behavior, endpoint persistence, and router registration.
+
+Changed:
+
+- Research evaluation now supports both mock-generated evidence and manually submitted evidence.
+
 ## Sprint 005: Evidence and Decision Logging
 
 Added:

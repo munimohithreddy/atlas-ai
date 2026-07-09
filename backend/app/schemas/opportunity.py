@@ -23,7 +23,18 @@ class OpportunityEvidenceCreate(BaseModel):
     signal_type: str = Field(..., min_length=2, max_length=100)
     value: int = Field(..., ge=0, le=100)
     summary: str = Field(..., min_length=2)
-    confidence_score: int = Field(..., ge=0, le=100)
+    confidence_score: int = Field(
+        ...,
+        ge=0,
+        le=100,
+        description="Integer confidence score from 0 to 100.",
+    )
+
+
+class OpportunityEvaluateWithEvidenceRequest(BaseModel):
+    topic: str = Field(..., min_length=2, max_length=255)
+    niche: str | None = None
+    evidence_items: list[OpportunityEvidenceCreate] = Field(..., min_length=1)
 
 
 class OpportunityEvidenceResponse(BaseModel):
@@ -60,4 +71,9 @@ class OpportunityResponse(BaseModel):
 
 
 class OpportunityWithEvidenceResponse(OpportunityResponse):
+    ai_executive_summary: str | None = None
+    ai_key_strengths: list[str] | None = None
+    ai_key_risks: list[str] | None = None
+    ai_recommendation_reason: str | None = None
+    ai_suggested_next_actions: list[str] | None = None
     evidence: list[OpportunityEvidenceResponse]

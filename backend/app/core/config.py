@@ -20,6 +20,8 @@ class Settings(BaseSettings):
 
     redis_host: str = "localhost"
     redis_port: int = 6379
+    openai_api_key: str | None = None
+    openai_model: str = "gpt-5.5"
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,

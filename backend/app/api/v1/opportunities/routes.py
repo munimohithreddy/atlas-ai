@@ -6,14 +6,23 @@ from app.repositories.opportunity_repository import (
     create_opportunity,
     get_opportunity,
     list_opportunities,
+    update_opportunity_analysis,
 )
 from app.schemas.opportunity import (
     OpportunityCreate,
     OpportunityEvaluateRequest,
+    OpportunityEvaluateWithEvidenceRequest,
     OpportunityResponse,
     OpportunityWithEvidenceResponse,
 )
-from app.services.research import build_opportunity_from_research
+from app.services.research import (
+    build_opportunity_from_manual_evidence,
+    build_opportunity_from_research,
+)
+from app.services.research.analysis import (
+    build_score_snapshot,
+    synthesize_opportunity_analysis,
+)
 
 router = APIRouter(prefix='/opportunities', tags=['opportunities'])
 
@@ -34,6 +43,30 @@ def evaluate(payload: OpportunityEvaluateRequest, db: Session = Depends(get_db))
         evaluation.opportunity,
         evidence_items=evaluation.evidence,
     )
+
+
+@router.post('/evaluate-with-evidence', response_model=OpportunityResponse)
+def evaluate_with_evidence(
+    payload: OpportunityEvaluateWithEvidenceRequest,
+    db: Session = Depends(get_db),
+):
+    evaluation = build_opportunity_from_manual_evidence(
+        topic=payload.topic,
+        niche=payload.niche,
+        evidence_items=payload.evidence_items,
+    )
+    opportunity = create_opportunity(
+        db,
+        evaluation.opportunity,
+        evidence_items=evaluation.evidence,
+    )
+    analysis = synthesize_opportunity_analysis(
+        topic=payload.topic,
+        niche=payload.niche,
+        evidence_items=evaluation.evidence,
+        scores=build_score_snapshot(opportunity),
+    )
+    return update_opportunity_analysis(db, opportunity, analysis)
 
 
 @router.get('/{opportunity_id}', response_model=OpportunityWithEvidenceResponse)
