@@ -1,5 +1,23 @@
 # Atlas AI Decisions
 
+## Sprint 010: Evidence-Based Scoring Engine
+
+### Make opportunity evidence scoring canonical
+
+Evidence aggregation determines opportunity score inputs, so the canonical implementation lives under `services/opportunities/`. Research services can collect evidence, but opportunity services own scoring decisions.
+
+### Use confidence-weighted averages per signal type
+
+When multiple evidence items support the same signal, Atlas weights each value by `confidence_score`. Higher-confidence evidence has more influence while still allowing weaker evidence to contribute.
+
+### Default missing scores to neutral 50
+
+Missing evidence should not crash evaluation or imply a zero score. Atlas uses `50` as a neutral midpoint for required score fields when no matching evidence exists.
+
+### Preserve manual score entry
+
+Manual `POST /api/v1/opportunities` still accepts explicit score fields. Evidence-based scoring applies to provider-backed evaluation flows.
+
 ## Sprint 009: Affiliate Program Intelligence v1
 
 ### Store affiliate programs before integrating networks

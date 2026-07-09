@@ -1,5 +1,25 @@
 # Atlas AI Sprints
 
+## Sprint 010: Evidence-Based Scoring Engine
+
+Goal: improve opportunity scoring so Atlas aggregates evidence by signal type using confidence-weighted scoring.
+
+Scope:
+
+- Add `backend/app/services/opportunities/evidence_scoring.py`.
+- Calculate normalized opportunity score inputs from evidence items.
+- Use confidence-weighted averages for multiple evidence items with the same signal type.
+- Map `affiliate_potential` evidence to `affiliate_score`.
+- Use a documented neutral default of `50` for missing required scores.
+- Update provider-backed evaluation flows to use the opportunity evidence scoring service.
+- Keep manual `POST /api/v1/opportunities` working.
+- Add tests for single evidence, weighted evidence, missing defaults, affiliate mapping, and endpoint usage.
+
+Out of scope:
+
+- External APIs.
+- Scraping.
+
 ## Sprint 009: Affiliate Program Intelligence v1
 
 Goal: add structured affiliate intelligence so Atlas can evaluate monetization potential from stored affiliate programs.

@@ -1,5 +1,18 @@
 # Atlas AI Changelog
 
+## Sprint 010: Evidence-Based Scoring Engine
+
+Added:
+
+- Opportunity evidence scoring service under `backend/app/services/opportunities/evidence_scoring.py`.
+- Tests for single evidence scoring, confidence-weighted averaging, neutral defaults, affiliate mapping, and endpoint behavior.
+
+Changed:
+
+- Research evidence scoring now delegates to the opportunity evidence scoring service.
+- Provider-backed opportunity evaluation now builds score inputs directly from evidence.
+- `POST /api/v1/opportunities/evaluate-with-evidence` uses confidence-weighted evidence scores.
+
 ## Sprint 009: Affiliate Program Intelligence v1
 
 Added:

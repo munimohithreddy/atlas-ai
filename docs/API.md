@@ -177,7 +177,16 @@ Supported `signal_type` values:
 - `pinterest` or `pinterest_potential`
 - `seo` or `seo_potential`
 
-Multiple evidence items for the same signal are combined with a confidence-weighted average. Missing signals default to `50`.
+Multiple evidence items for the same signal are combined with a confidence-weighted average. Missing signals default to `50`, the documented neutral midpoint.
+
+Evidence signal mapping:
+
+- `demand` -> `demand_score`
+- `competition` -> `competition_score`
+- `buyer_intent` -> `buyer_intent_score`
+- `affiliate` or `affiliate_potential` -> `affiliate_score`
+- `pinterest` or `pinterest_potential` -> `pinterest_score`
+- `seo` or `seo_potential` -> `seo_score`
 
 `confidence_score` must be an integer from `0` to `100`, where `0` means no confidence and `100` means maximum confidence.
 

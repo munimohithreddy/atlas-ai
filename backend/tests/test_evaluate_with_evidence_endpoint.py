@@ -92,6 +92,34 @@ class EvaluateWithEvidenceEndpointTests(unittest.TestCase):
                 ],
             )
 
+    def test_evaluate_with_evidence_uses_confidence_weighted_scores(self) -> None:
+        db = FakeSession()
+        payload = OpportunityEvaluateWithEvidenceRequest(
+            topic="best espresso machines",
+            evidence_items=[
+                {
+                    "source": "manual_search",
+                    "signal_type": "demand",
+                    "value": 80,
+                    "summary": "High-confidence demand evidence.",
+                    "confidence_score": 90,
+                },
+                {
+                    "source": "manual_search",
+                    "signal_type": "demand",
+                    "value": 60,
+                    "summary": "Lower-confidence demand evidence.",
+                    "confidence_score": 30,
+                },
+            ],
+        )
+
+        opportunity = evaluate_with_evidence(payload=payload, db=db)
+
+        self.assertEqual(opportunity.demand_score, 75)
+        self.assertEqual(opportunity.competition_score, 50)
+        self.assertEqual(opportunity.affiliate_score, 50)
+
 
 if __name__ == "__main__":
     unittest.main()
