@@ -1,5 +1,22 @@
 # Atlas AI Changelog
 
+## Sprint 009: Affiliate Program Intelligence v1
+
+Added:
+
+- `AffiliateProgram` SQLAlchemy model.
+- Alembic migration for `affiliate_programs`.
+- Affiliate program schemas, repository, and API routes.
+- Affiliate intelligence service for matching programs and estimating affiliate potential.
+- Affiliate research provider for research preview.
+- Tests for affiliate program creation, listing, scoring, and preview evidence.
+- Database documentation.
+
+Changed:
+
+- Research preview now includes affiliate evidence when stored affiliate programs match the requested topic or niche.
+- API router now includes affiliate program routes.
+
 ## Sprint 008: Research Provider Architecture
 
 Added:

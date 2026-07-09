@@ -41,6 +41,40 @@ Response:
 }
 ```
 
+Research preview includes `affiliate_programs` evidence when stored affiliate programs match the submitted topic or niche.
+
+## Affiliate Programs
+
+### `POST /affiliate-programs`
+
+Creates a stored affiliate program.
+
+Request:
+
+```json
+{
+  "name": "Coffee Gear Partner",
+  "network": "Impact",
+  "category": "coffee",
+  "website_url": "https://example.com/coffee",
+  "commission_type": "percent",
+  "commission_rate": 12.5,
+  "cookie_duration_days": 30,
+  "approval_required": true,
+  "notes": "espresso machines and coffee gear"
+}
+```
+
+Response: `AffiliateProgramResponse`.
+
+### `GET /affiliate-programs`
+
+Lists stored affiliate programs.
+
+### `GET /affiliate-programs/{id}`
+
+Returns one stored affiliate program.
+
 ## Opportunities
 
 ### `POST /opportunities`

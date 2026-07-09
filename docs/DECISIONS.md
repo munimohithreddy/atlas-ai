@@ -1,5 +1,23 @@
 # Atlas AI Decisions
 
+## Sprint 009: Affiliate Program Intelligence v1
+
+### Store affiliate programs before integrating networks
+
+Atlas can reason about monetization potential from curated affiliate program records before adding external affiliate APIs. This keeps the first affiliate intelligence layer deterministic and testable.
+
+### Keep affiliate matching simple and transparent
+
+Sprint 009 matches stored programs against topic and niche using program name, category, network, and notes. The logic is intentionally simple so users can understand why affiliate evidence appeared.
+
+### Represent affiliate intelligence as research evidence
+
+Matching affiliate programs produce an `affiliate_potential` evidence signal in research preview. This lets affiliate intelligence reuse the existing provider and evidence architecture.
+
+### Do not scrape or call affiliate networks yet
+
+Affiliate programs are entered through Atlas APIs. External affiliate networks can be added later behind provider interfaces.
+
 ## Sprint 008: Research Provider Architecture
 
 ### Move provider contracts into the research service layer

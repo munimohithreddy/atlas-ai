@@ -1,5 +1,26 @@
 # Atlas AI Sprints
 
+## Sprint 009: Affiliate Program Intelligence v1
+
+Goal: add structured affiliate intelligence so Atlas can evaluate monetization potential from stored affiliate programs.
+
+Scope:
+
+- Add `AffiliateProgram` model and migration.
+- Add schemas, repository, and API routes for affiliate programs.
+- Add `POST /api/v1/affiliate-programs`.
+- Add `GET /api/v1/affiliate-programs`.
+- Add `GET /api/v1/affiliate-programs/{id}`.
+- Add affiliate potential estimation from stored programs.
+- Include affiliate evidence in research preview when matching programs exist.
+- Add tests for affiliate program creation/listing, affiliate potential estimation, and affiliate evidence in preview.
+- Update API, sprint, changelog, decision, and database documentation.
+
+Out of scope:
+
+- Scraping.
+- External affiliate APIs.
+
 ## Sprint 008: Research Provider Architecture
 
 Goal: create a clean provider architecture for future evidence collection without adding real external APIs yet.
