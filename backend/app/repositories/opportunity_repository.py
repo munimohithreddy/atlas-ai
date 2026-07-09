@@ -1,7 +1,10 @@
-﻿from sqlalchemy.orm import Session
+from collections.abc import Sequence
+
+from sqlalchemy.orm import Session, selectinload
 
 from app.models.opportunity import Opportunity
-from app.schemas.opportunity import OpportunityCreate
+from app.models.opportunity_evidence import OpportunityEvidence
+from app.schemas.opportunity import OpportunityCreate, OpportunityEvidenceCreate
 from app.services.opportunities.scoring import (
     build_reasoning,
     calculate_opportunity_score,
@@ -9,7 +12,11 @@ from app.services.opportunities.scoring import (
 )
 
 
-def create_opportunity(db: Session, payload: OpportunityCreate) -> Opportunity:
+def create_opportunity(
+    db: Session,
+    payload: OpportunityCreate,
+    evidence_items: Sequence[OpportunityEvidenceCreate] | None = None,
+) -> Opportunity:
     score = calculate_opportunity_score(
         demand_score=payload.demand_score,
         competition_score=payload.competition_score,
@@ -48,7 +55,36 @@ def create_opportunity(db: Session, payload: OpportunityCreate) -> Opportunity:
     db.add(opportunity)
     db.commit()
     db.refresh(opportunity)
+
+    if evidence_items:
+        evidence_rows = [
+            OpportunityEvidence(
+                opportunity_id=opportunity.id,
+                source=item.source,
+                signal_type=item.signal_type,
+                value=item.value,
+                summary=item.summary,
+                confidence_score=item.confidence_score,
+            )
+            for item in evidence_items
+        ]
+        for evidence in evidence_rows:
+            db.add(evidence)
+        db.commit()
+        for evidence in evidence_rows:
+            db.refresh(evidence)
+        opportunity.evidence = evidence_rows
+
     return opportunity
+
+
+def get_opportunity(db: Session, opportunity_id: int) -> Opportunity | None:
+    return (
+        db.query(Opportunity)
+        .options(selectinload(Opportunity.evidence))
+        .filter(Opportunity.id == opportunity_id)
+        .first()
+    )
 
 
 def list_opportunities(db: Session) -> list[Opportunity]:

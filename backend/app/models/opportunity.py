@@ -1,7 +1,7 @@
-﻿from datetime import datetime
+from datetime import datetime
 
 from sqlalchemy import DateTime, Float, Integer, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
 
@@ -26,3 +26,7 @@ class Opportunity(Base):
     reasoning: Mapped[str] = mapped_column(Text, nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    evidence: Mapped[list["OpportunityEvidence"]] = relationship(
+        back_populates="opportunity",
+        cascade="all, delete-orphan",
+    )

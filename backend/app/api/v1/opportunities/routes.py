@@ -1,15 +1,17 @@
-﻿from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database.deps import get_db
 from app.repositories.opportunity_repository import (
     create_opportunity,
+    get_opportunity,
     list_opportunities,
 )
 from app.schemas.opportunity import (
     OpportunityCreate,
     OpportunityEvaluateRequest,
     OpportunityResponse,
+    OpportunityWithEvidenceResponse,
 )
 from app.services.research import build_opportunity_from_research
 
@@ -23,11 +25,23 @@ def create(payload: OpportunityCreate, db: Session = Depends(get_db)):
 
 @router.post('/evaluate', response_model=OpportunityResponse)
 def evaluate(payload: OpportunityEvaluateRequest, db: Session = Depends(get_db)):
-    researched_payload = build_opportunity_from_research(
+    evaluation = build_opportunity_from_research(
         topic=payload.topic,
         niche=payload.niche,
     )
-    return create_opportunity(db, researched_payload)
+    return create_opportunity(
+        db,
+        evaluation.opportunity,
+        evidence_items=evaluation.evidence,
+    )
+
+
+@router.get('/{opportunity_id}', response_model=OpportunityWithEvidenceResponse)
+def get_by_id(opportunity_id: int, db: Session = Depends(get_db)):
+    opportunity = get_opportunity(db, opportunity_id)
+    if opportunity is None:
+        raise HTTPException(status_code=404, detail="Opportunity not found")
+    return opportunity
 
 
 @router.get('', response_model=list[OpportunityResponse])

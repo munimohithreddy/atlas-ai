@@ -1,5 +1,19 @@
 # Atlas AI Decisions
 
+## Sprint 005: Evidence and Decision Logging
+
+### Store evidence separately from opportunity scores
+
+Opportunity scores are the decision output. Evidence rows are the supporting inputs. Keeping them separate lets Atlas show why an opportunity was scored without changing the existing opportunity table each time research sources evolve.
+
+### Keep evaluate responses backward compatible
+
+`POST /api/v1/opportunities/evaluate` still returns `OpportunityResponse`. Evidence is available through the detail endpoint so existing create/evaluate clients keep the same response shape.
+
+### Persist mock evidence now, external evidence later
+
+The mock provider now produces evidence items with source, signal type, value, summary, and confidence. This establishes the storage contract without calling external APIs yet.
+
 ## Sprint 004: Research Intelligence v1
 
 ### Use a deterministic mock research provider first

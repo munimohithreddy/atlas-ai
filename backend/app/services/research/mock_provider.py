@@ -1,4 +1,8 @@
-from app.services.research.signals import ResearchSignals
+from app.services.research.signals import (
+    ResearchEvidenceItem,
+    ResearchResult,
+    ResearchSignals,
+)
 
 
 COMMERCIAL_TERMS = {
@@ -24,13 +28,25 @@ VISUAL_TERMS = {
     "travel",
 }
 
+MOCK_SOURCE = "mock_research"
+
 
 def _clamp_score(value: int) -> int:
     return max(0, min(100, value))
 
 
+def _evidence(signal_type: str, value: int, summary: str) -> ResearchEvidenceItem:
+    return ResearchEvidenceItem(
+        source=MOCK_SOURCE,
+        signal_type=signal_type,
+        value=value,
+        summary=summary,
+        confidence_score=70,
+    )
+
+
 class MockResearchProvider:
-    def research(self, topic: str, niche: str | None = None) -> ResearchSignals:
+    def research(self, topic: str, niche: str | None = None) -> ResearchResult:
         topic_words = topic.lower().split()
         combined_text = f"{topic} {niche or ''}".lower()
 
@@ -38,18 +54,62 @@ class MockResearchProvider:
         visual_matches = sum(term in combined_text for term in VISUAL_TERMS)
         word_count = len(topic_words)
 
-        demand = 45 + min(word_count * 4, 20) + (8 if niche else 0)
-        competition = 35 + min(word_count * 5, 25) + commercial_matches * 7
-        buyer_intent = 40 + commercial_matches * 18 + (8 if "for" in topic_words else 0)
-        affiliate_potential = 42 + commercial_matches * 15 + (10 if niche else 0)
-        pinterest_potential = 35 + visual_matches * 14 + min(word_count * 3, 12)
-        seo_potential = 48 + min(word_count * 4, 18) - commercial_matches * 3
-
-        return ResearchSignals(
-            demand=_clamp_score(demand),
-            competition=_clamp_score(competition),
-            buyer_intent=_clamp_score(buyer_intent),
-            affiliate_potential=_clamp_score(affiliate_potential),
-            pinterest_potential=_clamp_score(pinterest_potential),
-            seo_potential=_clamp_score(seo_potential),
+        demand = _clamp_score(45 + min(word_count * 4, 20) + (8 if niche else 0))
+        competition = _clamp_score(
+            35 + min(word_count * 5, 25) + commercial_matches * 7
         )
+        buyer_intent = _clamp_score(
+            40 + commercial_matches * 18 + (8 if "for" in topic_words else 0)
+        )
+        affiliate_potential = _clamp_score(
+            42 + commercial_matches * 15 + (10 if niche else 0)
+        )
+        pinterest_potential = _clamp_score(
+            35 + visual_matches * 14 + min(word_count * 3, 12)
+        )
+        seo_potential = _clamp_score(
+            48 + min(word_count * 4, 18) - commercial_matches * 3
+        )
+
+        signals = ResearchSignals(
+            demand=demand,
+            competition=competition,
+            buyer_intent=buyer_intent,
+            affiliate_potential=affiliate_potential,
+            pinterest_potential=pinterest_potential,
+            seo_potential=seo_potential,
+        )
+        evidence = (
+            _evidence(
+                "demand",
+                demand,
+                f"Mock demand estimate from topic length and niche context for '{topic}'.",
+            ),
+            _evidence(
+                "competition",
+                competition,
+                f"Mock competition estimate from topic breadth and commercial modifiers for '{topic}'.",
+            ),
+            _evidence(
+                "buyer_intent",
+                buyer_intent,
+                f"Mock buyer intent estimate from commercial wording in '{topic}'.",
+            ),
+            _evidence(
+                "affiliate_potential",
+                affiliate_potential,
+                f"Mock affiliate estimate from commercial wording and niche context for '{topic}'.",
+            ),
+            _evidence(
+                "pinterest_potential",
+                pinterest_potential,
+                f"Mock Pinterest estimate from visual topic terms in '{topic}'.",
+            ),
+            _evidence(
+                "seo_potential",
+                seo_potential,
+                f"Mock SEO estimate from topic specificity and commercial competition for '{topic}'.",
+            ),
+        )
+
+        return ResearchResult(signals=signals, evidence=evidence)

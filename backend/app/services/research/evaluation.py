@@ -1,16 +1,25 @@
-from app.schemas.opportunity import OpportunityCreate
+from dataclasses import dataclass
+
+from app.schemas.opportunity import OpportunityCreate, OpportunityEvidenceCreate
 from app.services.research.mock_provider import MockResearchProvider
+
+
+@dataclass(frozen=True)
+class ResearchOpportunityEvaluation:
+    opportunity: OpportunityCreate
+    evidence: tuple[OpportunityEvidenceCreate, ...]
 
 
 def build_opportunity_from_research(
     topic: str,
     niche: str | None = None,
     provider: MockResearchProvider | None = None,
-) -> OpportunityCreate:
+) -> ResearchOpportunityEvaluation:
     research_provider = provider or MockResearchProvider()
-    signals = research_provider.research(topic=topic, niche=niche)
+    result = research_provider.research(topic=topic, niche=niche)
+    signals = result.signals
 
-    return OpportunityCreate(
+    opportunity = OpportunityCreate(
         topic=topic,
         niche=niche,
         demand_score=signals.demand,
@@ -20,3 +29,15 @@ def build_opportunity_from_research(
         pinterest_score=signals.pinterest_potential,
         seo_score=signals.seo_potential,
     )
+    evidence = tuple(
+        OpportunityEvidenceCreate(
+            source=item.source,
+            signal_type=item.signal_type,
+            value=item.value,
+            summary=item.summary,
+            confidence_score=item.confidence_score,
+        )
+        for item in result.evidence
+    )
+
+    return ResearchOpportunityEvaluation(opportunity=opportunity, evidence=evidence)

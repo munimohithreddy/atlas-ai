@@ -12,6 +12,7 @@ if str(BACKEND_DIR) not in sys.path:
 from app.core.config import settings
 from app.database.base import Base
 from app.models.opportunity import Opportunity  # noqa: F401
+from app.models.opportunity_evidence import OpportunityEvidence  # noqa: F401
 from app.models.site import Site  # noqa: F401
 
 config = context.config
