@@ -13,6 +13,11 @@ class OpportunityCreate(BaseModel):
     seo_score: int = Field(..., ge=0, le=100)
 
 
+class OpportunityEvaluateRequest(BaseModel):
+    topic: str = Field(..., min_length=2, max_length=255)
+    niche: str | None = None
+
+
 class OpportunityResponse(BaseModel):
     id: int
     topic: str

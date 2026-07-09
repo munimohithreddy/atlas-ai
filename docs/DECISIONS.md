@@ -1,5 +1,19 @@
 # Atlas AI Decisions
 
+## Sprint 004: Research Intelligence v1
+
+### Use a deterministic mock research provider first
+
+Atlas needs a stable research contract before external integrations are introduced. The mock provider returns structured signals without calling OpenAI, Google Trends, Reddit, Pinterest, or affiliate networks.
+
+### Convert research signals into the existing opportunity creation schema
+
+The evaluate endpoint builds an `OpportunityCreate` payload from research signals and then reuses the existing repository path. This keeps scoring, recommendation, persistence, and response behavior consistent with manual opportunity creation.
+
+### Keep provider output simple and score-shaped
+
+The first provider returns integer signals on the same `0..100` scale used by opportunity scoring. This makes the provider easy to test and easy to replace later with real research integrations.
+
 ## Sprint 003: Foundation Hardening
 
 ### Use `backend/requirements.txt` for the current backend dependency baseline

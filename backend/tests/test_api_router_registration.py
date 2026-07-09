@@ -17,6 +17,7 @@ class ApiRouterRegistrationTests(unittest.TestCase):
 
         self.assertIn("/health", paths)
         self.assertIn("/opportunities", paths)
+        self.assertIn("/opportunities/evaluate", paths)
 
 
 if __name__ == "__main__":
