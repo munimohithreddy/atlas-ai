@@ -8,6 +8,39 @@ Base path: `/api/v1`
 
 Returns application, database, and Redis health status.
 
+## Research
+
+### `POST /research/preview`
+
+Runs configured research providers for a topic and optional niche, then returns provider evidence without creating an opportunity or storing evidence.
+
+Request:
+
+```json
+{
+  "topic": "best espresso machines",
+  "niche": "coffee"
+}
+```
+
+Response:
+
+```json
+{
+  "topic": "best espresso machines",
+  "niche": "coffee",
+  "evidence": [
+    {
+      "source": "mock_research",
+      "signal_type": "demand",
+      "value": 65,
+      "summary": "Mock demand estimate from topic length and niche context for 'best espresso machines'.",
+      "confidence_score": 70
+    }
+  ]
+}
+```
+
 ## Opportunities
 
 ### `POST /opportunities`

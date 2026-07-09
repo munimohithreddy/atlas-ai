@@ -1,5 +1,23 @@
 # Atlas AI Decisions
 
+## Sprint 008: Research Provider Architecture
+
+### Move provider contracts into the research service layer
+
+Provider orchestration is business behavior, so the durable provider protocol lives under `services/research/providers/`. Integration packages can still adapt external systems later, but scoring and orchestration remain service-owned.
+
+### Keep compatibility shims for existing provider imports
+
+Existing mock and manual provider import paths continue to work. This keeps the sprint targeted and avoids unrelated endpoint or test churn.
+
+### Add preview before persistence
+
+`POST /api/v1/research/preview` lets Atlas inspect provider evidence before creating an opportunity. This makes future real providers easier to validate without polluting opportunity history.
+
+### Use mock provider as the default orchestrator provider
+
+Until real external providers exist, the orchestrator defaults to the mock provider. That keeps local development deterministic while exercising the same architecture future providers will use.
+
 ## Sprint 007: OpenAI Research Synthesizer v1
 
 ### Use OpenAI only for synthesis, not research collection

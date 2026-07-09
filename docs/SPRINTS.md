@@ -1,5 +1,25 @@
 # Atlas AI Sprints
 
+## Sprint 008: Research Provider Architecture
+
+Goal: create a clean provider architecture for future evidence collection without adding real external APIs yet.
+
+Scope:
+
+- Add `backend/app/services/research/providers/`.
+- Define a `ResearchProvider` protocol and `EvidenceSignal` data structure.
+- Move mock and manual evidence behavior into provider classes.
+- Add `ResearchOrchestrator` to run one or more providers for a topic and niche.
+- Keep existing opportunity evaluation endpoints working.
+- Add `POST /api/v1/research/preview` to preview provider evidence without creating an opportunity.
+- Add tests for provider protocol conformance, mock provider, manual provider, orchestrator aggregation, and research preview.
+- Update API, sprint, changelog, and decision documentation.
+
+Out of scope:
+
+- Real external APIs.
+- Scraping.
+
 ## Sprint 007: OpenAI Research Synthesizer v1
 
 Goal: synthesize submitted evidence into a clearer opportunity analysis while keeping deterministic fallback behavior.

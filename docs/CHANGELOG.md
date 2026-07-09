@@ -1,5 +1,22 @@
 # Atlas AI Changelog
 
+## Sprint 008: Research Provider Architecture
+
+Added:
+
+- Research provider package under `backend/app/services/research/providers/`.
+- `ResearchProvider` protocol, `EvidenceSignal`, and `ResearchProviderResult`.
+- Service-layer mock and manual evidence provider classes.
+- `ResearchOrchestrator` for running multiple providers.
+- `ResearchPreviewRequest` and research preview response schemas.
+- `POST /api/v1/research/preview` endpoint.
+- Tests for provider protocol conformance, mock/manual providers, orchestrator aggregation, and research preview.
+
+Changed:
+
+- Existing mock/manual provider import paths remain available as compatibility shims.
+- API router now includes research routes alongside health and opportunities.
+
 ## Sprint 007: OpenAI Research Synthesizer v1
 
 Added:
