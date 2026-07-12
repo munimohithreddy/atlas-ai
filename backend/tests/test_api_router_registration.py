@@ -21,6 +21,7 @@ class ApiRouterRegistrationTests(unittest.TestCase):
         self.assertIn("/opportunities", paths)
         self.assertIn("/opportunities/evaluate", paths)
         self.assertIn("/opportunities/evaluate-with-evidence", paths)
+        self.assertIn("/opportunities/portfolio", paths)
         self.assertIn("/research/preview", paths)
 
 

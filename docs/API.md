@@ -132,6 +132,49 @@ Response:
 
 Evidence rows are stored with the opportunity and can be retrieved from the detail endpoint.
 
+### `POST /opportunities/portfolio`
+
+Evaluates multiple topics with the research orchestrator, ranks them by Business Opportunity Score, and returns the ranked portfolio without creating `Opportunity` records.
+
+Request:
+
+```json
+{
+  "topics": [
+    "best espresso machines",
+    "home office ideas",
+    "standing desk accessories"
+  ],
+  "niche": "affiliate"
+}
+```
+
+`topics` must contain at least one topic. Topics are trimmed and de-duplicated case-insensitively before evaluation.
+
+Response:
+
+```json
+{
+  "results": [
+    {
+      "rank": 1,
+      "topic": "best espresso machines",
+      "business_score": 66.55,
+      "recommendation": "WATCH",
+      "confidence": 70,
+      "demand_score": 65,
+      "competition_score": 57,
+      "buyer_intent_score": 58,
+      "affiliate_score": 67,
+      "pinterest_score": 44,
+      "seo_score": 57
+    }
+  ]
+}
+```
+
+Results are sorted by highest `business_score`. Scores are calculated from provider evidence using the evidence-based scoring service, and missing score inputs use the documented neutral default of `50`. `confidence` is the rounded average confidence across collected evidence for the topic, or `0` if no evidence is available.
+
 ### `POST /opportunities/evaluate-with-evidence`
 
 Evaluates and stores an opportunity from topic, optional niche, and manually submitted research evidence. This endpoint does not call OpenAI, scrape websites, or call external search providers.

@@ -1,5 +1,27 @@
 # Atlas AI Sprints
 
+## Sprint 011: Opportunity Portfolio Engine
+
+Goal: evaluate multiple opportunity topics in one request and rank them by Business Opportunity Score.
+
+Scope:
+
+- Add `POST /api/v1/opportunities/portfolio`.
+- Add request and response schemas for portfolio evaluation.
+- Use the existing `ResearchOrchestrator` to collect evidence for each topic.
+- Use the existing evidence-based scoring service to calculate normalized score inputs.
+- Use the existing opportunity score and recommendation service to calculate `business_score` and recommendation.
+- Return ranked, non-persisted portfolio results sorted by highest `business_score`.
+- Calculate a portfolio confidence value from collected evidence confidence.
+- Validate empty topic lists and de-duplicate submitted topics case-insensitively before evaluation.
+- Add tests for the endpoint, ranking order, empty topic validation, duplicate topic handling, and route registration.
+
+Out of scope:
+
+- Persisting portfolio results as `Opportunity` rows.
+- External APIs.
+- Scraping.
+
 ## Sprint 010: Evidence-Based Scoring Engine
 
 Goal: improve opportunity scoring so Atlas aggregates evidence by signal type using confidence-weighted scoring.

@@ -12,9 +12,12 @@ from app.schemas.opportunity import (
     OpportunityCreate,
     OpportunityEvaluateRequest,
     OpportunityEvaluateWithEvidenceRequest,
+    OpportunityPortfolioRequest,
+    OpportunityPortfolioResponse,
     OpportunityResponse,
     OpportunityWithEvidenceResponse,
 )
+from app.services.opportunities.portfolio import evaluate_opportunity_portfolio
 from app.services.research import (
     build_opportunity_from_manual_evidence,
     build_opportunity_from_research,
@@ -67,6 +70,16 @@ def evaluate_with_evidence(
         scores=build_score_snapshot(opportunity),
     )
     return update_opportunity_analysis(db, opportunity, analysis)
+
+
+@router.post('/portfolio', response_model=OpportunityPortfolioResponse)
+def portfolio(payload: OpportunityPortfolioRequest):
+    return {
+        "results": evaluate_opportunity_portfolio(
+            topics=payload.topics,
+            niche=payload.niche,
+        )
+    }
 
 
 @router.get('/{opportunity_id}', response_model=OpportunityWithEvidenceResponse)

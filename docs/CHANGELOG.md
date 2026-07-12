@@ -1,5 +1,18 @@
 # Atlas AI Changelog
 
+## Sprint 011: Opportunity Portfolio Engine
+
+Added:
+
+- `POST /api/v1/opportunities/portfolio` for ranking multiple topics without persisting opportunities.
+- `OpportunityPortfolioRequest`, `OpportunityPortfolioItemResponse`, and `OpportunityPortfolioResponse` schemas.
+- Portfolio evaluation service under `backend/app/services/opportunities/portfolio.py`.
+- Backend tests for portfolio endpoint behavior, ranking order, empty topic validation, duplicate topic handling, and route registration.
+
+Changed:
+
+- Opportunity routes now include portfolio evaluation before the `{opportunity_id}` detail route.
+
 ## Sprint 010: Evidence-Based Scoring Engine
 
 Added:

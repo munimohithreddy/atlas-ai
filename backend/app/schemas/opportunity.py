@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class OpportunityCreate(BaseModel):
@@ -35,6 +35,29 @@ class OpportunityEvaluateWithEvidenceRequest(BaseModel):
     topic: str = Field(..., min_length=2, max_length=255)
     niche: str | None = None
     evidence_items: list[OpportunityEvidenceCreate] = Field(..., min_length=1)
+
+
+class OpportunityPortfolioRequest(BaseModel):
+    topics: list[str] = Field(..., min_length=1)
+    niche: str | None = None
+
+    @field_validator("topics")
+    @classmethod
+    def normalize_topics(cls, topics: list[str]) -> list[str]:
+        normalized_topics: list[str] = []
+        seen_topics: set[str] = set()
+
+        for topic in topics:
+            normalized_topic = topic.strip()
+            if len(normalized_topic) < 2:
+                raise ValueError("Each topic must be at least 2 characters.")
+
+            topic_key = normalized_topic.casefold()
+            if topic_key not in seen_topics:
+                normalized_topics.append(normalized_topic)
+                seen_topics.add(topic_key)
+
+        return normalized_topics
 
 
 class OpportunityEvidenceResponse(BaseModel):
@@ -77,3 +100,21 @@ class OpportunityWithEvidenceResponse(OpportunityResponse):
     ai_recommendation_reason: str | None = None
     ai_suggested_next_actions: list[str] | None = None
     evidence: list[OpportunityEvidenceResponse]
+
+
+class OpportunityPortfolioItemResponse(BaseModel):
+    rank: int
+    topic: str
+    business_score: float
+    recommendation: str
+    confidence: int
+    demand_score: int
+    competition_score: int
+    buyer_intent_score: int
+    affiliate_score: int
+    pinterest_score: int
+    seo_score: int
+
+
+class OpportunityPortfolioResponse(BaseModel):
+    results: list[OpportunityPortfolioItemResponse]

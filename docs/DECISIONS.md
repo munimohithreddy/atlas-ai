@@ -1,5 +1,27 @@
 # Atlas AI Decisions
 
+## Sprint 011: Opportunity Portfolio Engine
+
+### Keep portfolio evaluation non-persistent
+
+Portfolio ranking is a comparison workflow, not a decision record. The endpoint returns ranked results without creating `Opportunity` rows so users can explore topic sets without polluting stored opportunities.
+
+### Compose existing research and scoring services
+
+The portfolio service uses `ResearchOrchestrator`, `calculate_scores_from_evidence`, `calculate_opportunity_score`, and `make_recommendation`. This keeps scoring behavior consistent with existing opportunity evaluation and avoids duplicate scoring logic.
+
+### Rank by Business Opportunity Score
+
+Portfolio results expose the calculated opportunity score as `business_score` and sort descending. The response includes rank numbers after sorting so clients can display a stable ordered portfolio.
+
+### De-duplicate submitted topics
+
+Submitted topics are trimmed and de-duplicated case-insensitively before evaluation. This avoids repeated provider work and keeps portfolio results focused on unique ideas.
+
+### Use evidence confidence for portfolio confidence
+
+Portfolio confidence is the rounded average `confidence_score` across collected evidence. If a topic has no evidence, confidence is `0`.
+
 ## Sprint 010: Evidence-Based Scoring Engine
 
 ### Make opportunity evidence scoring canonical
