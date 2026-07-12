@@ -1,5 +1,23 @@
 # Atlas AI Decisions
 
+## Sprint 012: Founder Dashboard v0.1
+
+### Start with one focused dashboard
+
+The first frontend surface is a single founder dashboard for portfolio evaluation. This keeps the product usable while avoiding premature navigation, authentication, billing, charts, or workflow expansion.
+
+### Keep frontend logic client-side and narrow
+
+The dashboard validates and normalizes form input in the browser, then calls the existing portfolio endpoint. Ranking and scoring remain backend responsibilities.
+
+### Use plain CSS
+
+Sprint 012 uses simple project-local CSS instead of adding a UI framework. This keeps dependencies low and leaves room for a more deliberate design system later.
+
+### Configure local CORS explicitly
+
+FastAPI allows `http://localhost:3000` so the local Next.js app can call the backend during development. Broader CORS policy can be introduced later through configuration when deployment targets are known.
+
 ## Sprint 011: Opportunity Portfolio Engine
 
 ### Keep portfolio evaluation non-persistent

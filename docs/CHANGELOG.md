@@ -1,5 +1,21 @@
 # Atlas AI Changelog
 
+## Sprint 012: Founder Dashboard v0.1
+
+Added:
+
+- Minimal Next.js TypeScript frontend under `frontend/`.
+- Founder dashboard page for portfolio evaluation.
+- Frontend environment example with `NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000`.
+- FastAPI CORS middleware for the local frontend origin.
+- Backend CORS configuration test.
+- Architecture documentation for the frontend and backend split.
+
+Changed:
+
+- README now includes backend and frontend setup, run, test, and verification commands.
+- Git ignore rules now cover local Next.js build output.
+
 ## Sprint 011: Opportunity Portfolio Engine
 
 Added:

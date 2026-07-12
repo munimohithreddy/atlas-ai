@@ -1,5 +1,27 @@
 # Atlas AI Sprints
 
+## Sprint 012: Founder Dashboard v0.1
+
+Goal: give the founder a usable interface for evaluating and ranking business opportunities without using Swagger or raw JSON.
+
+Scope:
+
+- Add a minimal Next.js, TypeScript, App Router frontend under `frontend/`.
+- Add a founder dashboard page with Atlas AI heading, niche input, multiline topics input, submit button, loading state, and error state.
+- Call `POST /api/v1/opportunities/portfolio` through `NEXT_PUBLIC_API_BASE_URL`.
+- Display ranked portfolio results with recommendation badges and all returned score fields.
+- Add frontend validation for optional niche, at least one non-empty topic, trimming, and duplicate topic removal.
+- Add local frontend environment example with `NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000`.
+- Add FastAPI CORS middleware allowing `http://localhost:3000`.
+- Update README and architecture documentation for the new frontend surface.
+
+Out of scope:
+
+- Authentication.
+- Billing.
+- Charts.
+- Additional UI frameworks.
+
 ## Sprint 011: Opportunity Portfolio Engine
 
 Goal: evaluate multiple opportunity topics in one request and rank them by Business Opportunity Score.
