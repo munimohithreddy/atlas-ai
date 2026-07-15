@@ -1,5 +1,27 @@
 # Atlas AI Decisions
 
+## Sprint 013: Business Planner Foundation
+
+### Atlas creates brands, not one website per keyword
+
+The first durable planning layer introduces brands as the unit of ownership. Opportunities feed a brand-specific business plan instead of spawning isolated keyword sites.
+
+### Monetization and acquisition are separate decisions
+
+The business planner first chooses how an opportunity makes money, then chooses how it will acquire traffic. This keeps strategy clearer and makes recommendations easier to explain.
+
+### Business planning is deterministic in v1
+
+Sprint 013 keeps planning rules fully deterministic. Existing opportunity scores and evidence provide the inputs, but the new planner does not call OpenAI.
+
+### External platforms are acquisition channels
+
+Pinterest, YouTube, email, Reddit, LinkedIn, Instagram, and direct outreach are treated as acquisition channels. Monetization models remain separate from distribution.
+
+### Human approval is required before campaign launch
+
+Business plans can be drafted and reviewed in Atlas, but launching campaigns remains a human approval step for now.
+
 ## Sprint 012: Founder Dashboard v0.1
 
 ### Start with one focused dashboard

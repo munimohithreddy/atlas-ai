@@ -2,6 +2,21 @@
 
 ## Tables
 
+### `brands`
+
+Stores named Atlas brands that own opportunities and plans.
+
+Key columns:
+
+- `id`
+- `name`
+- `slug`
+- `market`
+- `description`
+- `status`
+- `created_at`
+- `updated_at`
+
 ### `sites`
 
 Stores owned or planned Atlas sites.
@@ -63,3 +78,30 @@ Key columns:
 - `approval_required`
 - `notes`
 - `created_at`
+
+### `business_plans`
+
+Stores deterministic v1 plans derived from a ranked opportunity and optional brand.
+
+Key columns:
+
+- `id`
+- `opportunity_id`
+- `brand_id`
+- `primary_monetization`
+- `secondary_monetization`
+- `primary_acquisition_channel`
+- `secondary_acquisition_channels`
+- `recommended_assets`
+- `target_audience`
+- `value_proposition`
+- `revenue_low_monthly`
+- `revenue_high_monthly`
+- `revenue_confidence_score`
+- `effort_level`
+- `estimated_launch_days`
+- `recommendation_summary`
+- `next_action`
+- `status`
+- `created_at`
+- `updated_at`

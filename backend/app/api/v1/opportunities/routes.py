@@ -26,6 +26,8 @@ from app.services.research.analysis import (
     build_score_snapshot,
     synthesize_opportunity_analysis,
 )
+from app.schemas.business_plan import BusinessPlanCreateRequest, BusinessPlanResponse
+from app.services.business_planning.business_plan import BusinessPlanService
 
 router = APIRouter(prefix='/opportunities', tags=['opportunities'])
 
@@ -93,3 +95,22 @@ def get_by_id(opportunity_id: int, db: Session = Depends(get_db)):
 @router.get('', response_model=list[OpportunityResponse])
 def list_all(db: Session = Depends(get_db)):
     return list_opportunities(db)
+
+
+@router.post('/{opportunity_id}/business-plan', response_model=BusinessPlanResponse)
+def create_business_plan(
+    opportunity_id: int,
+    payload: BusinessPlanCreateRequest,
+    db: Session = Depends(get_db),
+):
+    opportunity = get_opportunity(db, opportunity_id)
+    if opportunity is None:
+        raise HTTPException(status_code=404, detail="Opportunity not found")
+    service = BusinessPlanService()
+    return service.create_plan(
+        db=db,
+        opportunity=opportunity,
+        brand_id=payload.brand_id,
+        brand_name=payload.brand_name,
+        constraints=payload.user_constraints,
+    )

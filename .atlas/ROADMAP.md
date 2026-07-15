@@ -14,20 +14,24 @@ Opportunity Intelligence
 
 Phase 4
 
-Content Intelligence
+Business Planning
 
 Phase 5
 
-Publishing
+Content Intelligence
 
 Phase 6
 
-Analytics
+Publishing
 
 Phase 7
 
-Optimization
+Analytics
 
 Phase 8
+
+Optimization
+
+Phase 9
 
 Autonomous Business

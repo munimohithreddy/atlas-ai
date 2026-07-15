@@ -22,6 +22,27 @@ type PortfolioResponse = {
   results: PortfolioResult[];
 };
 
+type BusinessPlan = {
+  id: number;
+  opportunity_id: number;
+  brand_id: number | null;
+  primary_monetization: string;
+  secondary_monetization: string | null;
+  primary_acquisition_channel: string;
+  secondary_acquisition_channels: string[];
+  recommended_assets: string[];
+  target_audience: string;
+  value_proposition: string;
+  revenue_low_monthly: number;
+  revenue_high_monthly: number;
+  revenue_confidence_score: number;
+  effort_level: string;
+  estimated_launch_days: number;
+  recommendation_summary: string;
+  next_action: string;
+  status: string;
+};
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
 
@@ -31,7 +52,9 @@ export default function DashboardPage() {
     "best espresso machines\nhome office ideas\nstanding desk accessories",
   );
   const [results, setResults] = useState<PortfolioResult[]>([]);
+  const [plansByTopic, setPlansByTopic] = useState<Record<string, BusinessPlan>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [planningTopic, setPlanningTopic] = useState("");
   const [error, setError] = useState("");
 
   const topicCount = useMemo(
@@ -83,6 +106,54 @@ export default function DashboardPage() {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  async function handleCreateBusinessPlan(topic: string) {
+    setError("");
+    setPlanningTopic(topic);
+
+    const response = await fetch(`${API_BASE_URL}/api/v1/opportunities/evaluate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        topic,
+        niche: niche.trim() || null,
+      }),
+    });
+
+    if (!response.ok) {
+      const message = await readErrorMessage(response);
+      throw new Error(message);
+    }
+
+    const opportunity = (await response.json()) as { id: number };
+    const planResponse = await fetch(
+      `${API_BASE_URL}/api/v1/opportunities/${opportunity.id}/business-plan`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_constraints: {
+            monthly_budget: null,
+            hours_per_week: null,
+            target_monthly_revenue: null,
+          },
+        }),
+      },
+    );
+
+    if (!planResponse.ok) {
+      const message = await readErrorMessage(planResponse);
+      throw new Error(message);
+    }
+
+    const plan = (await planResponse.json()) as BusinessPlan;
+    setPlansByTopic((current) => ({ ...current, [topic]: plan }));
+    setPlanningTopic("");
   }
 
   return (
@@ -152,6 +223,47 @@ export default function DashboardPage() {
                   <Metric label="Pinterest" value={result.pinterest_score} />
                   <Metric label="SEO" value={result.seo_score} />
                 </div>
+                <div className="plan-summary">
+                  {plansByTopic[result.topic] ? (
+                    <>
+                      <p>
+                        Monetization: {plansByTopic[result.topic].primary_monetization}
+                      </p>
+                      <p>
+                        Primary channel:{" "}
+                        {plansByTopic[result.topic].primary_acquisition_channel}
+                      </p>
+                      <p>
+                        Revenue: $
+                        {plansByTopic[result.topic].revenue_low_monthly} - $
+                        {plansByTopic[result.topic].revenue_high_monthly} / month
+                      </p>
+                      <p>Effort: {plansByTopic[result.topic].effort_level}</p>
+                      <p>
+                        Assets: {plansByTopic[result.topic].recommended_assets.join(", ")}
+                      </p>
+                      <p>Next: {plansByTopic[result.topic].next_action}</p>
+                    </>
+                  ) : null}
+                </div>
+                <button
+                  className="plan-button"
+                  type="button"
+                  disabled={planningTopic === result.topic}
+                  onClick={async () => {
+                    try {
+                      await handleCreateBusinessPlan(result.topic);
+                    } catch (caughtError) {
+                      setError(
+                        caughtError instanceof Error
+                          ? caughtError.message
+                          : "Business plan creation failed.",
+                      );
+                    }
+                  }}
+                >
+                  {planningTopic === result.topic ? "Creating..." : "Create Business Plan"}
+                </button>
               </div>
             </article>
           ))}

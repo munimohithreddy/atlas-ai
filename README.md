@@ -29,6 +29,12 @@ Backend verification:
 .\.venv\Scripts\alembic.exe -c backend\alembic.ini upgrade head --sql
 ```
 
+Business planner verification:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest backend.tests.test_brands backend.tests.test_business_planning
+```
+
 ## Frontend Setup
 
 ```powershell
@@ -61,4 +67,10 @@ The dashboard calls:
 
 ```text
 http://127.0.0.1:8000/api/v1/opportunities/portfolio
+```
+
+The business-plan action also calls:
+
+```text
+http://127.0.0.1:8000/api/v1/opportunities/{opportunity_id}/business-plan
 ```

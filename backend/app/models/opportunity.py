@@ -1,4 +1,6 @@
-from datetime import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
 
 from sqlalchemy import JSON, DateTime, Float, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -34,8 +36,22 @@ class Opportunity(Base):
         nullable=True,
     )
 
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    evidence: Mapped[list["OpportunityEvidence"]] = relationship(
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    business_plan: Mapped[BusinessPlan | None] = relationship(
+        "BusinessPlan",
+        back_populates="opportunity",
+        uselist=False,
+    )
+    evidence: Mapped[list[OpportunityEvidence]] = relationship(
+        "OpportunityEvidence",
         back_populates="opportunity",
         cascade="all, delete-orphan",
     )
+
+
+from app.models.business_plan import BusinessPlan  # noqa: E402,F401
+from app.models.opportunity_evidence import OpportunityEvidence  # noqa: E402,F401

@@ -1,0 +1,6 @@
+from app.services.business_planning.acquisition import AcquisitionChannelRecommendationService
+from app.services.business_planning.business_plan import BusinessPlanService
+from app.services.business_planning.effort import EffortEstimationService
+from app.services.business_planning.monetization import MonetizationRecommendationService
+from app.services.business_planning.revenue import RevenueEstimationService
+

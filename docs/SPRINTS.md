@@ -1,5 +1,27 @@
 # Atlas AI Sprints
 
+## Sprint 013: Business Planner Foundation
+
+Goal: turn a ranked opportunity into an explainable initial business plan that Atlas can later execute through campaigns, assets, distribution, analytics, and learning.
+
+Scope:
+
+- Add Brand and BusinessPlan domain models.
+- Add deterministic business planning services for monetization, acquisition, revenue, and effort.
+- Add business plan creation and retrieval endpoints.
+- Extend the founder dashboard with a Create Business Plan action and plan summary display.
+- Update product, API, database, changelog, and decision documentation.
+- Add tests for brand creation, duplicate slug rejection, business plan creation, recommendation services, missing opportunity handling, and route registration.
+
+Out of scope:
+
+- Authentication.
+- Payments.
+- Charts.
+- Scheduling.
+- Publishing.
+- Website generation.
+
 ## Sprint 012: Founder Dashboard v0.1
 
 Goal: give the founder a usable interface for evaluating and ranking business opportunities without using Swagger or raw JSON.

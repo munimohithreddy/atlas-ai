@@ -1,5 +1,23 @@
 # Atlas AI Changelog
 
+## Sprint 013: Business Planner Foundation
+
+Added:
+
+- Brand domain model, schemas, repository, routes, and migration.
+- BusinessPlan domain model, schemas, repository, routes, and migration.
+- Deterministic business-planning services for monetization, acquisition, revenue, and effort.
+- `POST /api/v1/opportunities/{opportunity_id}/business-plan`.
+- `GET /api/v1/brands`, `GET /api/v1/brands/{brand_id}`, `GET /api/v1/business-plans`, and `GET /api/v1/business-plans/{business_plan_id}`.
+- Founder dashboard action for creating and displaying business plans.
+- Tests for brand creation, duplicate slug rejection, business plan creation, recommendation services, missing opportunity handling, and route registration.
+
+Changed:
+
+- Business planning reuses existing Opportunity scores and evidence and stays deterministic in v1.
+- External platforms are treated as acquisition channels, not monetization models.
+- Documentation now records the Brand -> Opportunity -> BusinessPlan -> Campaign -> Assets -> Distribution -> Analytics -> Learning flow.
+
 ## Sprint 012: Founder Dashboard v0.1
 
 Added:

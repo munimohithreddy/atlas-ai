@@ -289,3 +289,49 @@ Response:
 ### `GET /opportunities`
 
 Lists stored opportunities in newest-first order.
+
+### `POST /opportunities/{opportunity_id}/business-plan`
+
+Creates a deterministic business plan from a stored opportunity.
+
+Request:
+
+```json
+{
+  "brand_id": null,
+  "brand_name": "WorkspaceHQ",
+  "user_constraints": {
+    "monthly_budget": 500,
+    "hours_per_week": 8,
+    "target_monthly_revenue": 1000
+  }
+}
+```
+
+Response: `BusinessPlanResponse`.
+
+The endpoint uses existing Opportunity scores and evidence. It does not call OpenAI in this sprint.
+
+## Brands
+
+### `POST /brands`
+
+Creates a brand.
+
+### `GET /brands`
+
+Lists brands.
+
+### `GET /brands/{brand_id}`
+
+Returns one brand.
+
+## Business Plans
+
+### `GET /business-plans`
+
+Lists business plans with basic `offset` and `limit` pagination.
+
+### `GET /business-plans/{business_plan_id}`
+
+Returns one business plan.
