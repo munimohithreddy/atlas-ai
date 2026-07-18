@@ -1,5 +1,28 @@
 # Atlas AI Sprints
 
+## Sprint 014: Campaign Foundation
+
+Goal: convert an approved BusinessPlan into a launch-ready Campaign with deterministic tasks, planned assets, revenue goals, and measurable campaign status.
+
+Scope:
+
+- Add Campaign, CampaignTask, and CampaignAsset models.
+- Add deterministic campaign services for creation, task generation, asset planning, and status transitions.
+- Add campaign CRUD, task listing, asset listing, approval, and status endpoints.
+- Extend the founder dashboard with campaign creation and campaign details display.
+- Add tests for campaign creation, duplicate prevention, status transitions, tasks, assets, router registration, and migration imports.
+- Update product, API, database, changelog, decision, and architecture documentation.
+
+Out of scope:
+
+- Content generation.
+- OpenAI generation.
+- Publishing integrations.
+- Scheduling.
+- Analytics ingestion.
+- Authentication.
+- Billing.
+
 ## Sprint 013: Business Planner Foundation
 
 Goal: turn a ranked opportunity into an explainable initial business plan that Atlas can later execute through campaigns, assets, distribution, analytics, and learning.

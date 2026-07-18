@@ -1,5 +1,23 @@
 # Atlas AI Changelog
 
+## Sprint 014: Campaign Foundation
+
+Added:
+
+- Campaign, CampaignTask, and CampaignAsset models.
+- Campaign repository and service layer.
+- Campaign task generation, asset planning, and status transition services.
+- `POST /api/v1/campaigns`, `GET /api/v1/campaigns`, `GET /api/v1/campaigns/{campaign_id}`, `PATCH /api/v1/campaigns/{campaign_id}`, `GET /api/v1/campaigns/{campaign_id}/tasks`, `GET /api/v1/campaigns/{campaign_id}/assets`, `POST /api/v1/campaigns/{campaign_id}/approve`, and `POST /api/v1/campaigns/{campaign_id}/status`.
+- Founder dashboard campaign creation and campaign details display.
+- Campaign migration and import coverage.
+- Tests for creation, duplicate prevention, status transitions, task generation, asset planning, routing, and migration imports.
+
+Changed:
+
+- Campaigns are deterministic in v1 and only plan execution work.
+- Tasks and assets are planning artifacts, not generated content or published output.
+- Campaign approval is required before execution advances.
+
 ## Sprint 013: Business Planner Foundation
 
 Added:

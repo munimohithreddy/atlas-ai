@@ -12,6 +12,9 @@ if str(BACKEND_DIR) not in sys.path:
 from app.core.config import settings
 from app.database.base import Base
 from app.models.affiliate_program import AffiliateProgram  # noqa: F401
+from app.models.campaign import Campaign  # noqa: F401
+from app.models.campaign_asset import CampaignAsset  # noqa: F401
+from app.models.campaign_task import CampaignTask  # noqa: F401
 from app.models.brand import Brand  # noqa: F401
 from app.models.business_plan import BusinessPlan  # noqa: F401
 from app.models.opportunity import Opportunity  # noqa: F401

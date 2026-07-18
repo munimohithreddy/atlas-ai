@@ -335,3 +335,50 @@ Lists business plans with basic `offset` and `limit` pagination.
 ### `GET /business-plans/{business_plan_id}`
 
 Returns one business plan.
+
+## Campaigns
+
+### `POST /campaigns`
+
+Creates a deterministic campaign from an approved business plan.
+
+Request:
+
+```json
+{
+  "business_plan_id": 1,
+  "goal": "Launch a coffee gear review site",
+  "priority": "high",
+  "launch_target_date": "2026-08-01T00:00:00Z"
+}
+```
+
+Response: `CampaignResponse`.
+
+### `GET /campaigns`
+
+Lists campaigns with basic `offset` and `limit` pagination.
+
+### `GET /campaigns/{campaign_id}`
+
+Returns one campaign with ordered tasks and planned assets.
+
+### `PATCH /campaigns/{campaign_id}`
+
+Updates campaign fields.
+
+### `GET /campaigns/{campaign_id}/tasks`
+
+Returns ordered campaign tasks.
+
+### `GET /campaigns/{campaign_id}/assets`
+
+Returns planned campaign assets.
+
+### `POST /campaigns/{campaign_id}/approve`
+
+Moves a campaign from planning to approved.
+
+### `POST /campaigns/{campaign_id}/status`
+
+Requests a deterministic status transition.

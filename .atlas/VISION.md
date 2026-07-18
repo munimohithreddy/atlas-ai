@@ -208,7 +208,7 @@ Repeat
 
 # 7. System Architecture
 
-Atlas consists of eight engines.
+Atlas consists of nine engines.
 
 ## Discovery Engine
 
@@ -265,6 +265,10 @@ Campaigns contain:
 * KPIs
 * Timeline
 * Success metrics
+
+Campaigns are the only place where execution work is planned before distribution begins.
+
+Campaigns are the only place where execution work is planned before distribution begins.
 
 ---
 
@@ -592,6 +596,15 @@ Next:
 * Revenue estimator
 * Effort estimator
 * Campaign planner
+
+Milestone C1 — Campaign Foundation
+
+* Campaign model
+* Campaign task model
+* Campaign asset model
+* Campaign status model
+* Campaign approval flow
+* Campaign details
 
 ---
 

@@ -67,7 +67,13 @@ class BusinessPlan(Base):
         "Brand",
         back_populates="business_plans",
     )
+    campaign: Mapped["Campaign | None"] = relationship(
+        "Campaign",
+        back_populates="business_plan",
+        uselist=False,
+    )
 
 
 from app.models.brand import Brand  # noqa: E402,F401
 from app.models.opportunity import Opportunity  # noqa: E402,F401
+from app.models.campaign import Campaign  # noqa: E402,F401

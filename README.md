@@ -35,6 +35,13 @@ Business planner verification:
 .\.venv\Scripts\python.exe -m unittest backend.tests.test_brands backend.tests.test_business_planning
 ```
 
+Campaign verification:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest backend.tests.test_campaigns backend.tests.test_migration_imports
+.\.venv\Scripts\alembic.exe -c backend\alembic.ini upgrade head
+```
+
 ## Frontend Setup
 
 ```powershell
@@ -73,4 +80,29 @@ The business-plan action also calls:
 
 ```text
 http://127.0.0.1:8000/api/v1/opportunities/{opportunity_id}/business-plan
+```
+
+The campaign action also calls:
+
+```text
+http://127.0.0.1:8000/api/v1/campaigns
+http://127.0.0.1:8000/api/v1/campaigns/{campaign_id}
+```
+
+## Manual Workflow
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s backend\tests
+.\.venv\Scripts\uvicorn.exe app.main:app --app-dir backend --reload --host 127.0.0.1 --port 8000
+Set-Location frontend
+npm.cmd run dev
+```
+
+Git examples:
+
+```powershell
+git add .
+git commit -m "Add campaign foundation"
+git merge main
+git tag v0.1.0-campaigns
 ```

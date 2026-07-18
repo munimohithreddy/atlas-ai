@@ -1,5 +1,31 @@
 # Atlas AI Decisions
 
+## Sprint 014: Campaign Foundation
+
+### Nothing may be generated or published unless it belongs to a campaign
+
+Campaigns become the execution boundary. Content, assets, and distribution work are only planned through a campaign record.
+
+### Campaign creation is deterministic in v1
+
+Campaign names, slugs, tasks, assets, revenue targets, and build estimates are derived from the approved BusinessPlan without calling OpenAI.
+
+### Campaign approval is required before execution
+
+Campaigns start in planning and must be explicitly approved before they can move into execution-oriented states.
+
+### Tasks and assets are plans only in this milestone
+
+Sprint 014 creates execution plans, not generated content or publishing actions.
+
+### Monetization and acquisition remain separate concepts
+
+Campaign planning reuses the BusinessPlan separation between monetization strategy and acquisition strategy.
+
+### External platforms are acquisition and distribution channels
+
+Campaign assets and tasks may target external channels, but those channels remain distribution surfaces rather than the source of the business model.
+
 ## Sprint 013: Business Planner Foundation
 
 ### Atlas creates brands, not one website per keyword

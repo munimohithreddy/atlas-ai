@@ -1,6 +1,6 @@
 # Atlas AI System Architecture
 
-Atlas follows a Brand -> Opportunity -> BusinessPlan -> Campaign -> Assets -> Distribution -> Analytics -> Learning flow.
+Atlas follows an Opportunity -> BusinessPlan -> Campaign -> CampaignTask -> CampaignAsset -> Distribution -> Analytics -> Learning flow.
 
 ## Brand
 
@@ -16,7 +16,15 @@ The planning layer. A business plan chooses monetization, acquisition channels, 
 
 ## Campaign
 
-The execution layer. Campaigns will turn a plan into tracked work with human approval before launch.
+The execution layer. Campaigns turn approved business plans into tracked work with human approval before execution.
+
+## CampaignTask
+
+The work-planning layer. Tasks define the ordered execution steps that prepare a campaign.
+
+## CampaignAsset
+
+The asset-planning layer. Assets define what should be produced for each campaign channel.
 
 ## Assets
 
