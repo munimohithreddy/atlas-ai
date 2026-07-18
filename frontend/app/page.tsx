@@ -43,6 +43,49 @@ type BusinessPlan = {
   status: string;
 };
 
+type CampaignTask = {
+  id: number;
+  campaign_id: number;
+  title: string;
+  description: string | null;
+  category: string;
+  status: string;
+  priority: string;
+  estimated_hours: number;
+  depends_on_task_id: number | null;
+  order_index: number;
+};
+
+type CampaignAsset = {
+  id: number;
+  campaign_id: number;
+  asset_type: string;
+  title: string;
+  channel: string;
+  status: string;
+  planned_quantity: number;
+  generated_quantity: number;
+  published_quantity: number;
+};
+
+type CampaignDetail = {
+  id: number;
+  business_plan_id: number;
+  brand_id: number | null;
+  opportunity_id: number;
+  name: string;
+  slug: string;
+  goal: string;
+  status: string;
+  priority: string;
+  expected_monthly_revenue: number;
+  estimated_build_hours: number;
+  launch_target_date: string | null;
+  approved_at: string | null;
+  tasks: CampaignTask[];
+  assets: CampaignAsset[];
+};
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
 
@@ -53,8 +96,10 @@ export default function DashboardPage() {
   );
   const [results, setResults] = useState<PortfolioResult[]>([]);
   const [plansByTopic, setPlansByTopic] = useState<Record<string, BusinessPlan>>({});
+  const [campaignsByPlanId, setCampaignsByPlanId] = useState<Record<number, CampaignDetail>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [planningTopic, setPlanningTopic] = useState("");
+  const [campaignTopic, setCampaignTopic] = useState("");
   const [error, setError] = useState("");
 
   const topicCount = useMemo(
@@ -156,6 +201,42 @@ export default function DashboardPage() {
     setPlanningTopic("");
   }
 
+  async function handleCreateCampaign(topic: string, plan: BusinessPlan) {
+    setError("");
+    setCampaignTopic(topic);
+
+    const response = await fetch(`${API_BASE_URL}/api/v1/campaigns`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        business_plan_id: plan.id,
+        goal: plan.next_action,
+        priority: "medium",
+      }),
+    });
+
+    if (!response.ok) {
+      const message = await readErrorMessage(response);
+      throw new Error(message);
+    }
+
+    const campaign = (await response.json()) as CampaignDetail;
+    const detailResponse = await fetch(
+      `${API_BASE_URL}/api/v1/campaigns/${campaign.id}`,
+    );
+
+    if (!detailResponse.ok) {
+      const message = await readErrorMessage(detailResponse);
+      throw new Error(message);
+    }
+
+    const detail = (await detailResponse.json()) as CampaignDetail;
+    setCampaignsByPlanId((current) => ({ ...current, [plan.id]: detail }));
+    setCampaignTopic("");
+  }
+
   return (
     <main className="dashboard-shell">
       <section className="workspace">
@@ -243,6 +324,27 @@ export default function DashboardPage() {
                         Assets: {plansByTopic[result.topic].recommended_assets.join(", ")}
                       </p>
                       <p>Next: {plansByTopic[result.topic].next_action}</p>
+                      <button
+                        className="plan-button"
+                        type="button"
+                        disabled={campaignTopic === result.topic}
+                        onClick={async () => {
+                          try {
+                            await handleCreateCampaign(
+                              result.topic,
+                              plansByTopic[result.topic],
+                            );
+                          } catch (caughtError) {
+                            setError(
+                              caughtError instanceof Error
+                                ? caughtError.message
+                                : "Campaign creation failed.",
+                            );
+                          }
+                        }}
+                      >
+                        {campaignTopic === result.topic ? "Creating Campaign..." : "Create Campaign"}
+                      </button>
                     </>
                   ) : null}
                 </div>
@@ -268,6 +370,51 @@ export default function DashboardPage() {
             </article>
           ))}
         </section>
+
+        {Object.values(campaignsByPlanId).length > 0 ? (
+          <section className="campaign-detail-panel">
+            {Object.values(campaignsByPlanId).map((campaign) => {
+              const nextTask = campaign.tasks.find((task) => task.status === "pending");
+              return (
+                <article className="campaign-card" key={campaign.id}>
+                  <h2>{campaign.name}</h2>
+                  <p>Status: {campaign.status}</p>
+                  <p>Goal: {campaign.goal}</p>
+                  <p>Expected revenue: ${campaign.expected_monthly_revenue}/month</p>
+                  <p>Estimated build hours: {campaign.estimated_build_hours}</p>
+                  <p>Task count: {campaign.tasks.length}</p>
+                  <p>Asset count: {campaign.assets.length}</p>
+                  <p>Next pending task: {nextTask ? nextTask.title : "None"}</p>
+                  <div className="campaign-lists">
+                    <div>
+                      <h3>Tasks</h3>
+                      <ol>
+                        {campaign.tasks
+                          .slice()
+                          .sort((a, b) => a.order_index - b.order_index)
+                          .map((task) => (
+                            <li key={task.id}>
+                              {task.order_index}. {task.title} ({task.category})
+                            </li>
+                          ))}
+                      </ol>
+                    </div>
+                    <div>
+                      <h3>Planned assets</h3>
+                      <ul>
+                        {campaign.assets.map((asset) => (
+                          <li key={asset.id}>
+                            {asset.title} ({asset.asset_type}, {asset.channel})
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </section>
+        ) : null}
       </section>
     </main>
   );

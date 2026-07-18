@@ -105,3 +105,62 @@ Key columns:
 - `status`
 - `created_at`
 - `updated_at`
+
+### `campaigns`
+
+Stores launch-ready campaign plans derived from approved business plans.
+
+Key columns:
+
+- `id`
+- `business_plan_id`
+- `brand_id`
+- `opportunity_id`
+- `name`
+- `slug`
+- `goal`
+- `status`
+- `priority`
+- `expected_monthly_revenue`
+- `estimated_build_hours`
+- `launch_target_date`
+- `approved_at`
+- `created_at`
+- `updated_at`
+
+### `campaign_tasks`
+
+Stores ordered campaign execution tasks.
+
+Key columns:
+
+- `id`
+- `campaign_id`
+- `title`
+- `description`
+- `category`
+- `status`
+- `priority`
+- `estimated_hours`
+- `depends_on_task_id`
+- `order_index`
+- `created_at`
+- `updated_at`
+
+### `campaign_assets`
+
+Stores planned campaign assets.
+
+Key columns:
+
+- `id`
+- `campaign_id`
+- `asset_type`
+- `title`
+- `channel`
+- `status`
+- `planned_quantity`
+- `generated_quantity`
+- `published_quantity`
+- `created_at`
+- `updated_at`

@@ -34,6 +34,8 @@ class Brand(Base):
         "BusinessPlan",
         back_populates="brand",
     )
+    campaigns: Mapped[list["Campaign"]] = relationship("Campaign", back_populates="brand")
 
 
 from app.models.business_plan import BusinessPlan  # noqa: E402,F401
+from app.models.campaign import Campaign  # noqa: E402,F401

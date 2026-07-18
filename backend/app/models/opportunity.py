@@ -46,6 +46,7 @@ class Opportunity(Base):
         back_populates="opportunity",
         uselist=False,
     )
+    campaigns: Mapped[list["Campaign"]] = relationship("Campaign", back_populates="opportunity")
     evidence: Mapped[list[OpportunityEvidence]] = relationship(
         "OpportunityEvidence",
         back_populates="opportunity",
@@ -54,4 +55,5 @@ class Opportunity(Base):
 
 
 from app.models.business_plan import BusinessPlan  # noqa: E402,F401
+from app.models.campaign import Campaign  # noqa: E402,F401
 from app.models.opportunity_evidence import OpportunityEvidence  # noqa: E402,F401
