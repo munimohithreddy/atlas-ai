@@ -2,6 +2,8 @@
 
 Atlas follows an Opportunity -> BusinessPlan -> Campaign -> CampaignTask -> CampaignAsset -> Distribution -> Analytics -> Learning flow.
 
+Campaigns progress through Approved -> Task Execution -> Dependency Readiness -> Progress -> Campaign Ready before future asset production and publication milestones.
+
 ## Brand
 
 The ownership layer. A brand groups related opportunities and future campaigns around a market and audience.
@@ -20,7 +22,7 @@ The execution layer. Campaigns turn approved business plans into tracked work wi
 
 ## CampaignTask
 
-The work-planning layer. Tasks define the ordered execution steps that prepare a campaign.
+The work-planning and execution layer. Tasks define the ordered execution steps that prepare a campaign and track progress through deterministic states.
 
 ## CampaignAsset
 

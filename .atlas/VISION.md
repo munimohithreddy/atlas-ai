@@ -268,8 +268,6 @@ Campaigns contain:
 
 Campaigns are the only place where execution work is planned before distribution begins.
 
-Campaigns are the only place where execution work is planned before distribution begins.
-
 ---
 
 ## Asset Factory

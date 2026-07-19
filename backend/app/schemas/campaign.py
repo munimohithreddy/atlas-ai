@@ -29,11 +29,22 @@ class CampaignTaskResponse(BaseModel):
     status: str
     priority: str
     estimated_hours: int
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    blocked_reason: str | None = None
+    completion_notes: str | None = None
+    actual_hours: float | None = None
+    assigned_to: str | None = None
+    due_date: datetime | None = None
     depends_on_task_id: int | None
     order_index: int
 
     class Config:
         from_attributes = True
+
+
+class CampaignTaskDetailResponse(CampaignTaskResponse):
+    pass
 
 
 class CampaignAssetResponse(BaseModel):
@@ -65,6 +76,7 @@ class CampaignResponse(BaseModel):
     estimated_build_hours: int
     launch_target_date: datetime | None
     approved_at: datetime | None
+    progress: dict[str, object] | None = None
 
     class Config:
         from_attributes = True
@@ -73,4 +85,32 @@ class CampaignResponse(BaseModel):
 class CampaignDetailResponse(CampaignResponse):
     tasks: list[CampaignTaskResponse]
     assets: list[CampaignAssetResponse]
+
+
+class CampaignTaskUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    priority: str | None = None
+    estimated_hours: int | None = None
+    actual_hours: float | None = Field(default=None, ge=0)
+    assigned_to: str | None = None
+    due_date: datetime | None = None
+    order_index: int | None = None
+
+
+class CampaignTaskStatusRequest(BaseModel):
+    status: str
+
+
+class CampaignTaskBlockRequest(BaseModel):
+    blocked_reason: str = Field(..., min_length=2)
+
+
+class CampaignTaskCompleteRequest(BaseModel):
+    completion_notes: str | None = None
+    actual_hours: float | None = Field(default=None, ge=0)
+
+
+class CampaignTaskReopenRequest(BaseModel):
+    reason: str = Field(..., min_length=2)
 

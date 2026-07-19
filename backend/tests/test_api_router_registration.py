@@ -23,6 +23,7 @@ class ApiRouterRegistrationTests(unittest.TestCase):
         self.assertIn("/campaigns/{campaign_id}/tasks", paths)
         self.assertIn("/campaigns/{campaign_id}/assets", paths)
         self.assertIn("/campaigns/{campaign_id}/approve", paths)
+        self.assertIn("/campaigns/{campaign_id}/repair-readiness", paths)
         self.assertIn("/campaigns/{campaign_id}/status", paths)
         self.assertIn("/brands", paths)
         self.assertIn("/brands/{brand_id}", paths)

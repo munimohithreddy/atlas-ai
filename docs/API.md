@@ -361,7 +361,7 @@ Lists campaigns with basic `offset` and `limit` pagination.
 
 ### `GET /campaigns/{campaign_id}`
 
-Returns one campaign with ordered tasks and planned assets.
+Returns one campaign with progress, ordered tasks, and planned assets.
 
 ### `PATCH /campaigns/{campaign_id}`
 
@@ -382,3 +382,50 @@ Moves a campaign from planning to approved.
 ### `POST /campaigns/{campaign_id}/status`
 
 Requests a deterministic status transition.
+
+## Campaign Tasks
+
+### `GET /campaigns/{campaign_id}/tasks/{task_id}`
+
+Returns one task scoped to a campaign.
+
+### `PATCH /campaigns/{campaign_id}/tasks/{task_id}`
+
+Updates editable task metadata.
+
+### `POST /campaigns/{campaign_id}/tasks/{task_id}/start`
+
+Starts a ready task.
+
+### `POST /campaigns/{campaign_id}/tasks/{task_id}/block`
+
+Blocks a task with a reason.
+
+### `POST /campaigns/{campaign_id}/tasks/{task_id}/unblock`
+
+Clears a task block.
+
+### `POST /campaigns/{campaign_id}/tasks/{task_id}/review`
+
+Moves a task into review.
+
+### `POST /campaigns/{campaign_id}/tasks/{task_id}/complete`
+
+Completes a task and records completion data.
+
+Request body:
+
+- `completion_notes` - optional text
+- `actual_hours` - optional non-negative number with fractional hours supported, such as `0.25`, `1.5`, or `2.75`
+
+### `POST /campaigns/{campaign_id}/tasks/{task_id}/cancel`
+
+Cancels a task.
+
+### `POST /campaigns/{campaign_id}/tasks/{task_id}/reopen`
+
+Reopens a task with a reason.
+
+### `GET /campaigns/{campaign_id}/progress`
+
+Returns derived progress metrics for the campaign.
