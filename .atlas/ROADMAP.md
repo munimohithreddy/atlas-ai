@@ -20,6 +20,10 @@ Phase 4.1
 
 Campaign Foundation
 
+Phase 4.2
+
+Campaign Task Execution
+
 Phase 5
 
 Content Intelligence

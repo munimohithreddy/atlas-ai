@@ -1,5 +1,29 @@
 # Atlas AI Sprints
 
+## Sprint 015: Campaign Task Execution
+
+Goal: allow Atlas founders to execute a campaign through ordered, dependency-aware tasks while measuring progress and identifying the next actionable work.
+
+Scope:
+
+- Add task execution fields to `CampaignTask`.
+- Add deterministic task status transitions.
+- Add dependency validation and downstream readiness recalculation.
+- Add campaign progress derivation and next-ready task calculation.
+- Extend campaign task endpoints for detail, update, and actions.
+- Extend the founder dashboard with task execution controls and progress display.
+- Add tests for readiness, transitions, dependency unlocks, progress, and restrictions.
+- Support fractional actual hours on task completion with numeric persistence.
+
+Out of scope:
+
+- Content generation.
+- Asset production.
+- External publishing.
+- Scheduling.
+- Background workers.
+- Third-party integrations.
+
 ## Sprint 014: Campaign Foundation
 
 Goal: convert an approved BusinessPlan into a launch-ready Campaign with deterministic tasks, planned assets, revenue goals, and measurable campaign status.

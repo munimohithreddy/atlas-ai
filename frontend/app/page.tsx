@@ -52,6 +52,13 @@ type CampaignTask = {
   status: string;
   priority: string;
   estimated_hours: number;
+  started_at: string | null;
+  completed_at: string | null;
+  blocked_reason: string | null;
+  completion_notes: string | null;
+  actual_hours: number | null;
+  assigned_to: string | null;
+  due_date: string | null;
   depends_on_task_id: number | null;
   order_index: number;
 };
@@ -82,6 +89,16 @@ type CampaignDetail = {
   estimated_build_hours: number;
   launch_target_date: string | null;
   approved_at: string | null;
+  progress: {
+    total_tasks: number;
+    completed_tasks: number;
+    active_tasks: number;
+    blocked_tasks: number;
+    cancelled_tasks: number;
+    completion_percentage: number;
+    next_ready_task: { id: number; title: string; status: string; order_index: number } | null;
+    has_blockers: boolean;
+  };
   tasks: CampaignTask[];
   assets: CampaignAsset[];
 };
@@ -97,6 +114,7 @@ export default function DashboardPage() {
   const [results, setResults] = useState<PortfolioResult[]>([]);
   const [plansByTopic, setPlansByTopic] = useState<Record<string, BusinessPlan>>({});
   const [campaignsByPlanId, setCampaignsByPlanId] = useState<Record<number, CampaignDetail>>({});
+  const [taskActualHours, setTaskActualHours] = useState<Record<number, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [planningTopic, setPlanningTopic] = useState("");
   const [campaignTopic, setCampaignTopic] = useState("");
@@ -237,6 +255,51 @@ export default function DashboardPage() {
     setCampaignTopic("");
   }
 
+  async function handleTaskAction(
+    campaignId: number,
+    taskId: number,
+    action: "start" | "block" | "unblock" | "review" | "complete" | "cancel" | "reopen",
+    actualHours?: number | null,
+  ) {
+    const payloadByAction: Record<string, unknown> = {
+      block: { blocked_reason: "Blocked pending dependency or review." },
+      complete: {
+        completion_notes: "Task completed in the dashboard.",
+        actual_hours: actualHours ?? null,
+      },
+      reopen: { reason: "Reopened from the dashboard." },
+    };
+
+    const response = await fetch(
+      `${API_BASE_URL}/api/v1/campaigns/${campaignId}/tasks/${taskId}/${action}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body:
+          action in payloadByAction ? JSON.stringify(payloadByAction[action]) : undefined,
+      },
+    );
+
+    if (!response.ok) {
+      const message = await readErrorMessage(response);
+      throw new Error(message);
+    }
+
+    const detailResponse = await fetch(`${API_BASE_URL}/api/v1/campaigns/${campaignId}`);
+    if (!detailResponse.ok) {
+      const message = await readErrorMessage(detailResponse);
+      throw new Error(message);
+    }
+
+    const detail = (await detailResponse.json()) as CampaignDetail;
+    setCampaignsByPlanId((current) => ({
+      ...current,
+      [detail.business_plan_id]: detail,
+    }));
+  }
+
   return (
     <main className="dashboard-shell">
       <section className="workspace">
@@ -374,7 +437,7 @@ export default function DashboardPage() {
         {Object.values(campaignsByPlanId).length > 0 ? (
           <section className="campaign-detail-panel">
             {Object.values(campaignsByPlanId).map((campaign) => {
-              const nextTask = campaign.tasks.find((task) => task.status === "pending");
+              const nextTask = campaign.progress.next_ready_task;
               return (
                 <article className="campaign-card" key={campaign.id}>
                   <h2>{campaign.name}</h2>
@@ -382,9 +445,14 @@ export default function DashboardPage() {
                   <p>Goal: {campaign.goal}</p>
                   <p>Expected revenue: ${campaign.expected_monthly_revenue}/month</p>
                   <p>Estimated build hours: {campaign.estimated_build_hours}</p>
+                  <p>
+                    Progress: {campaign.progress.completion_percentage}% (
+                    {campaign.progress.completed_tasks}/{campaign.progress.total_tasks})
+                  </p>
+                  <p>Blocked tasks: {campaign.progress.blocked_tasks}</p>
                   <p>Task count: {campaign.tasks.length}</p>
                   <p>Asset count: {campaign.assets.length}</p>
-                  <p>Next pending task: {nextTask ? nextTask.title : "None"}</p>
+                  <p>Next ready task: {nextTask ? nextTask.title : "None"}</p>
                   <div className="campaign-lists">
                     <div>
                       <h3>Tasks</h3>
@@ -393,8 +461,129 @@ export default function DashboardPage() {
                           .slice()
                           .sort((a, b) => a.order_index - b.order_index)
                           .map((task) => (
-                            <li key={task.id}>
-                              {task.order_index}. {task.title} ({task.category})
+                            <li key={task.id} className="task-row">
+                              <div>
+                                {task.order_index}. {task.title} ({task.category})
+                              </div>
+                              <div className="task-meta">
+                                <span>Status: {task.status}</span>
+                                <span>Depends on: {task.depends_on_task_id ?? "None"}</span>
+                                <span>Priority: {task.priority}</span>
+                                <span>Assigned to: {task.assigned_to ?? "Unassigned"}</span>
+                                <span>Estimated hours: {task.estimated_hours}</span>
+                                <span>Actual hours: {task.actual_hours ?? "—"}</span>
+                                <span>Due: {task.due_date ?? "—"}</span>
+                                {task.blocked_reason ? <span>Blocked: {task.blocked_reason}</span> : null}
+                              </div>
+                              <div className="task-actions">
+                                {task.status === "pending" ? (
+                                  <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "start")}>
+                                    Start
+                                  </button>
+                                ) : null}
+                                {task.status === "ready" ? (
+                                  <>
+                                    <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "start")}>
+                                      Start
+                                    </button>
+                                    <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "block")}>
+                                      Block
+                                    </button>
+                                    <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "review")}>
+                                      Review
+                                    </button>
+                                    <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "cancel")}>
+                                      Cancel
+                                    </button>
+                                  </>
+                                ) : null}
+                                {task.status === "in_progress" ? (
+                                  <>
+                                    <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "block")}>
+                                      Block
+                                    </button>
+                                    <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "review")}>
+                                      Review
+                                    </button>
+                                  <label className="field">
+                                    <span>Actual hours</span>
+                                    <input
+                                      type="number"
+                                      min="0"
+                                      step="0.25"
+                                      value={taskActualHours[task.id] ?? ""}
+                                      onChange={(event) =>
+                                        setTaskActualHours((current) => ({
+                                          ...current,
+                                          [task.id]: event.target.value,
+                                        }))
+                                      }
+                                      placeholder="1.5"
+                                    />
+                                  </label>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleTaskAction(
+                                        campaign.id,
+                                        task.id,
+                                        "complete",
+                                        taskActualHours[task.id] === undefined || taskActualHours[task.id] === ""
+                                          ? null
+                                          : Number(taskActualHours[task.id]),
+                                      )
+                                    }
+                                  >
+                                    Complete
+                                  </button>
+                                    <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "cancel")}>
+                                      Cancel
+                                    </button>
+                                  </>
+                                ) : null}
+                                {task.status === "blocked" ? (
+                                  <>
+                                    <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "unblock")}>
+                                      Unblock
+                                    </button>
+                                    <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "start")}>
+                                      Start
+                                    </button>
+                                  </>
+                                ) : null}
+                                {task.status === "review" ? (
+                                  <>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleTaskAction(
+                                        campaign.id,
+                                        task.id,
+                                        "complete",
+                                        taskActualHours[task.id] === undefined || taskActualHours[task.id] === ""
+                                          ? null
+                                          : Number(taskActualHours[task.id]),
+                                      )
+                                    }
+                                  >
+                                    Complete
+                                  </button>
+                                    <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "start")}>
+                                      Start
+                                    </button>
+                                  </>
+                                ) : null}
+                                {task.status === "completed" ? (
+                                  <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "reopen")}>
+                                    Reopen
+                                  </button>
+                                ) : null}
+                                {task.status !== "cancelled" ? (
+                                  <button type="button" onClick={() => handleTaskAction(campaign.id, task.id, "cancel")}>
+                                    Cancel
+                                  </button>
+                                ) : null}
+                              </div>
                             </li>
                           ))}
                       </ol>

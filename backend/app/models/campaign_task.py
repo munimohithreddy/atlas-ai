@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
@@ -19,6 +19,13 @@ class CampaignTask(Base):
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
     priority: Mapped[str] = mapped_column(String(20), nullable=False, default="medium")
     estimated_hours: Mapped[int] = mapped_column(Integer, nullable=False)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    blocked_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    completion_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    actual_hours: Mapped[float | None] = mapped_column(Numeric(8, 2), nullable=True)
+    assigned_to: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    due_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     depends_on_task_id: Mapped[int | None] = mapped_column(
         ForeignKey("campaign_tasks.id"),
         nullable=True,
@@ -38,7 +45,10 @@ class CampaignTask(Base):
     )
 
     campaign: Mapped["Campaign"] = relationship("Campaign", back_populates="tasks")
-    depends_on_task: Mapped["CampaignTask | None"] = relationship(remote_side="CampaignTask.id")
+    depends_on_task: Mapped["CampaignTask | None"] = relationship(
+        remote_side="CampaignTask.id",
+        foreign_keys=[depends_on_task_id],
+    )
 
 
 from app.models.campaign import Campaign  # noqa: E402,F401

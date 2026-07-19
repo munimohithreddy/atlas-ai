@@ -42,6 +42,14 @@ Campaign verification:
 .\.venv\Scripts\alembic.exe -c backend\alembic.ini upgrade head
 ```
 
+Migration inspection:
+
+```powershell
+.\.venv\Scripts\alembic.exe -c backend\alembic.ini heads
+.\.venv\Scripts\alembic.exe -c backend\alembic.ini current
+.\.venv\Scripts\alembic.exe -c backend\alembic.ini history
+```
+
 ## Frontend Setup
 
 ```powershell
@@ -103,6 +111,7 @@ Git examples:
 ```powershell
 git add .
 git commit -m "Add campaign foundation"
+git push origin main
 git merge main
 git tag v0.1.0-campaigns
 ```

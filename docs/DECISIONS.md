@@ -1,5 +1,35 @@
 # Atlas AI Decisions
 
+## Sprint 015: Campaign Task Execution
+
+### Campaign Tasks are the unit of execution
+
+Execution happens by moving tasks through deterministic states rather than by changing campaign state directly.
+
+### Tasks may not execute before Campaign approval
+
+Planning can exist before approval, but task start is blocked until the campaign enters an approved execution state.
+
+### Dependencies are deterministic and campaign-scoped
+
+Tasks only unlock through their own campaign dependencies, and cross-campaign dependencies are rejected.
+
+### Completing tasks unlocks downstream tasks
+
+When a task finishes, dependent downstream tasks are recalculated and can move to ready if their dependencies are satisfied.
+
+### Campaign progress is derived from non-cancelled executable tasks
+
+The denominator excludes cancelled tasks and avoids division by zero when no executable work exists.
+
+### Task completion does not publish assets or the Campaign
+
+A completed task can advance campaign readiness, but it does not trigger publication.
+
+### Campaign readiness is distinct from publication
+
+The ready state means a campaign can execute further work or await publication; it does not mean the campaign has gone live.
+
 ## Sprint 014: Campaign Foundation
 
 ### Nothing may be generated or published unless it belongs to a campaign

@@ -142,6 +142,13 @@ Key columns:
 - `status`
 - `priority`
 - `estimated_hours`
+- `started_at`
+- `completed_at`
+- `blocked_reason`
+- `completion_notes`
+- `actual_hours` - fractional hours stored as `NUMERIC(8,2)` and allowed to be null
+- `assigned_to`
+- `due_date`
 - `depends_on_task_id`
 - `order_index`
 - `created_at`

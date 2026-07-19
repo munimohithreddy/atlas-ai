@@ -1,5 +1,23 @@
 # Atlas AI Changelog
 
+## Sprint 015: Campaign Task Execution
+
+Added:
+
+- Task execution fields on `CampaignTask` for started/completed timestamps, blocking reasons, completion notes, actual hours, assignment, and due dates.
+- Deterministic task status transitions and dependency readiness services.
+- Campaign progress derivation and next-ready task calculation.
+- Task detail, task update, and task action endpoints under campaigns.
+- Campaign task execution controls in the founder dashboard.
+- Tests for readiness, transitions, dependency unlocks, progress, and restrictions.
+
+Changed:
+
+- Campaign task completion now supports fractional actual hours with numeric storage and validation.
+- Campaign tasks are now the execution unit inside campaigns.
+- Progress is derived from non-cancelled executable tasks.
+- Campaign readiness remains distinct from publication.
+
 ## Sprint 014: Campaign Foundation
 
 Added:

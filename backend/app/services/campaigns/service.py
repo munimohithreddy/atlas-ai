@@ -5,8 +5,10 @@ from app.repositories.business_plan_repository import get_business_plan
 from app.repositories.campaign_asset_repository import create_campaign_assets
 from app.repositories.campaign_repository import create_campaign, get_campaign_by_slug
 from app.repositories.campaign_task_repository import create_campaign_tasks
+from app.services.campaigns.progress import CampaignProgressService
 from app.services.campaigns.assets import CampaignAssetPlanner
 from app.services.campaigns.tasks import CampaignTaskGenerator
+from app.services.campaigns.task_service import CampaignTaskService
 
 
 class CampaignService:
@@ -14,9 +16,13 @@ class CampaignService:
         self,
         task_generator: CampaignTaskGenerator | None = None,
         asset_planner: CampaignAssetPlanner | None = None,
+        task_service: CampaignTaskService | None = None,
+        progress_service: CampaignProgressService | None = None,
     ) -> None:
         self.task_generator = task_generator or CampaignTaskGenerator()
         self.asset_planner = asset_planner or CampaignAssetPlanner()
+        self.task_service = task_service or CampaignTaskService()
+        self.progress_service = progress_service or CampaignProgressService()
 
     def create_campaign(self, db, business_plan_id: int, goal: str | None, priority: str | None, launch_target_date):
         business_plan = get_business_plan(db, business_plan_id)
@@ -43,6 +49,7 @@ class CampaignService:
         create_campaign(db, campaign)
         create_campaign_tasks(db, self.task_generator.generate(campaign, business_plan))
         create_campaign_assets(db, self.asset_planner.plan(campaign, business_plan))
+        self.task_service.recalculate_initial_readiness(db, campaign)
         return campaign
 
     def _name_for_plan(self, business_plan) -> str:
@@ -60,3 +67,9 @@ class CampaignService:
             hours = 40
         hours += len(business_plan.recommended_assets) * 3
         return hours
+
+    def build_progress(self, db, campaign) -> dict:
+        return self.progress_service.build_progress(db, campaign)
+
+    def repair_task_readiness(self, db, campaign) -> None:
+        self.task_service.recalculate_campaign_readiness(db, campaign)
