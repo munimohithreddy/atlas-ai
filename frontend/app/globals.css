@@ -46,6 +46,8 @@ textarea {
 .workspace {
   width: min(1180px, 100%);
   margin: 0 auto;
+  display: grid;
+  gap: 18px;
 }
 
 .header-row {
@@ -87,6 +89,23 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
+}
+
+.hero-card,
+.workspace-card,
+.panel-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(12, 29, 24, 0.04);
+}
+
+.hero-copy,
+.helper-copy {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .control-panel {
@@ -142,6 +161,186 @@ textarea:focus {
   align-items: center;
   gap: 14px;
   min-height: 44px;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.compact-grid,
+.detail-grid,
+.campaign-kpis {
+  display: grid;
+  gap: 10px;
+}
+
+.compact-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.campaign-kpis {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-width: min(100%, 560px);
+}
+
+.kpi,
+.info {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fbfdfc;
+}
+
+.kpi span,
+.info span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.kpi strong,
+.info strong {
+  display: block;
+  margin-top: 6px;
+}
+
+.primary-action,
+.secondary-action,
+.tab {
+  background: var(--accent);
+}
+
+.primary-action {
+  align-self: start;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.tab-active {
+  background: var(--accent);
+  color: white;
+}
+
+.workspace-grid,
+.status-groups {
+  display: grid;
+  gap: 16px;
+}
+
+.workspace-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.group-column {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  background: var(--surface-muted);
+}
+
+.group-column h3,
+.group-column h4,
+.campaign-hero h2 {
+  margin: 0 0 8px;
+}
+
+.workflow-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  background: var(--surface);
+  margin-top: 12px;
+}
+
+.workflow-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.status-badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.item-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.stack-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.stack-list li {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fbfdfc;
+}
+
+.stack-list strong,
+.stack-list span {
+  display: block;
+}
+
+.stack-list span {
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.campaign-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.progress-shell {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #2f946f);
+}
+
+.empty-state.compact {
+  padding: 16px;
 }
 
 button {
@@ -330,8 +529,17 @@ h2 {
 
   .control-panel,
   .result-row,
-  .score-grid {
+  .score-grid,
+  .workspace-grid,
+  .detail-grid,
+  .compact-grid,
+  .field-grid,
+  .campaign-kpis {
     grid-template-columns: 1fr;
+  }
+
+  .campaign-hero {
+    flex-direction: column;
   }
 
   .rank-cell {

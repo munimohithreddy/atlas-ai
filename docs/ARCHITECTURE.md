@@ -34,6 +34,8 @@ The dashboard page:
 - calls `POST /api/v1/opportunities/portfolio`,
 - displays ranked opportunity results.
 
+The campaign workspace now presents campaign execution as a guided business flow with Overview, Tasks, Assets, and Activity tabs plus a grouped asset production queue. Statuses are translated into business-readable labels so the interface reads like an operating workspace instead of an admin console.
+
 The API base URL is configured through:
 
 ```text

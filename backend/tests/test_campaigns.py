@@ -9,8 +9,14 @@ from bootstrap import configure_test_environment
 configure_test_environment()
 
 from app.api.v1.campaigns import approve, change_status, create, get_assets, get_by_id, get_tasks, list_all  # noqa: E402
-from app.schemas.campaign import CampaignCreate, CampaignTaskCompleteRequest, CampaignTaskResponse  # noqa: E402
+from app.schemas.campaign import (  # noqa: E402
+    CampaignAssetCreate,
+    CampaignCreate,
+    CampaignTaskCompleteRequest,
+    CampaignTaskResponse,
+)
 from app.services.campaigns.progress import CampaignProgressService  # noqa: E402
+from app.services.campaigns.asset_service import CampaignAssetService  # noqa: E402
 from app.services.campaigns.task_dependencies import CampaignTaskDependencyService  # noqa: E402
 from app.services.campaigns.task_service import CampaignTaskService  # noqa: E402
 from app.services.campaigns.assets import CampaignAssetPlanner  # noqa: E402
@@ -22,8 +28,7 @@ from app.services.campaigns.tasks import CampaignTaskGenerator  # noqa: E402
 class FakeQuery:
     def __init__(self, items):
         self.items = items
-        self.campaign_id = None
-        self.slug = None
+        self.filters = {}
 
     def options(self, *args, **kwargs):
         return self
@@ -32,12 +37,8 @@ class FakeQuery:
         for condition in conditions:
             column_name = getattr(condition.left, "name", None)
             value = getattr(condition.right, "value", None)
-            if column_name == "id":
-                self.campaign_id = value
-            elif column_name == "slug":
-                self.slug = value
-            elif column_name == "campaign_id":
-                self.campaign_id = value
+            if column_name:
+                self.filters[column_name] = value
         return self
 
     def order_by(self, *args, **kwargs):
@@ -50,20 +51,14 @@ class FakeQuery:
         return self
 
     def first(self):
-        if self.campaign_id is not None:
-            for item in self.items:
-                if item.id == self.campaign_id:
-                    return item
-            return None
-        if self.slug is not None:
-            for item in self.items:
-                if item.slug == self.slug:
-                    return item
-            return None
-        return self.items[0] if self.items else None
+        all_items = self.all()
+        return all_items[0] if all_items else None
 
     def all(self):
-        return list(self.items)
+        results = list(self.items)
+        for field, value in self.filters.items():
+            results = [item for item in results if getattr(item, field, None) == value]
+        return results
 
 
 class FakeCampaignSession:
@@ -240,6 +235,44 @@ class CampaignTests(unittest.TestCase):
         self.assertTrue(any(asset.asset_type == "website" for asset in assets))
         self.assertTrue(any(asset.asset_type == "email_capture" for asset in assets))
 
+    def test_create_campaign_asset(self) -> None:
+        campaign = SimpleNamespace(id=1)
+        db = FakeCampaignSession(self.business_plan)
+        db.campaigns.append(campaign)
+        asset = CampaignAssetService().create_asset(
+            db,
+            campaign,
+            CampaignAssetCreate(title="Homepage", asset_type="homepage", channel="website"),
+        )
+        self.assertEqual(asset.title, "Homepage")
+        self.assertEqual(asset.status, "planned")
+        self.assertEqual(asset.order_index, 1)
+
+    def test_create_campaign_asset_linked_to_task(self) -> None:
+        campaign = SimpleNamespace(id=1)
+        task = SimpleNamespace(id=9, campaign_id=1)
+        db = FakeCampaignSession(self.business_plan)
+        db.campaigns.append(campaign)
+        db.tasks.append(task)
+        asset = CampaignAssetService().create_asset(
+            db,
+            campaign,
+            CampaignAssetCreate(title="Guide", asset_type="buying_guide", channel="website", campaign_task_id=9),
+        )
+        self.assertEqual(asset.campaign_task_id, 9)
+
+    def test_create_campaign_asset_rejects_cross_campaign_task(self) -> None:
+        campaign = SimpleNamespace(id=1)
+        db = FakeCampaignSession(self.business_plan)
+        db.campaigns.append(campaign)
+        db.tasks.append(SimpleNamespace(id=9, campaign_id=2))
+        with self.assertRaises(LookupError):
+            CampaignAssetService().create_asset(
+                db,
+                campaign,
+                CampaignAssetCreate(title="Guide", asset_type="buying_guide", channel="website", campaign_task_id=9),
+            )
+
     def test_campaign_status_transition_valid(self) -> None:
         campaign = SimpleNamespace(status="planning", approved_at=None)
         CampaignStatusService().transition(campaign, "approved")
@@ -352,6 +385,34 @@ class CampaignTests(unittest.TestCase):
         )
 
         self.assertEqual(completed.actual_hours, 2.75)
+
+    def test_asset_queue_orders_by_priority_and_due_date(self) -> None:
+        from datetime import datetime, timezone
+
+        db = FakeCampaignSession(self.business_plan)
+        db.assets.extend(
+            [
+                SimpleNamespace(id=1, campaign_id=1, title="Low", asset_type="blog_post", channel="website", status="planned", priority="low", due_date=None, order_index=3, created_at=datetime.now(timezone.utc)),
+                SimpleNamespace(id=2, campaign_id=1, title="High", asset_type="blog_post", channel="website", status="planned", priority="high", due_date=None, order_index=1, created_at=datetime.now(timezone.utc)),
+                SimpleNamespace(id=3, campaign_id=1, title="Critical", asset_type="blog_post", channel="website", status="planned", priority="critical", due_date=None, order_index=2, created_at=datetime.now(timezone.utc)),
+            ]
+        )
+        queued = CampaignAssetService().list_queue(db)
+        self.assertEqual([asset.id for asset in queued], [3, 2, 1])
+
+    def test_asset_queue_filters(self) -> None:
+        from datetime import datetime, timezone
+
+        db = FakeCampaignSession(self.business_plan)
+        db.assets.extend(
+            [
+                SimpleNamespace(id=1, campaign_id=1, title="A", asset_type="homepage", channel="website", status="queued", priority="medium", due_date=None, order_index=1, created_at=datetime.now(timezone.utc), assigned_to="sam"),
+                SimpleNamespace(id=2, campaign_id=2, title="B", asset_type="email", channel="email", status="planned", priority="high", due_date=None, order_index=2, created_at=datetime.now(timezone.utc), assigned_to="sam"),
+            ]
+        )
+        queued = CampaignAssetService().list_queue(db, campaign_id=1, status="queued")
+        self.assertEqual(len(queued), 1)
+        self.assertEqual(queued[0].id, 1)
 
     def test_task_reopen_moves_ready_campaign_back_to_building(self) -> None:
         campaign = SimpleNamespace(status="ready", id=1)

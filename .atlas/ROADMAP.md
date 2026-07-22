@@ -24,6 +24,10 @@ Phase 4.2
 
 Campaign Task Execution
 
+Phase 4.3
+
+Asset Production Queue
+
 Phase 5
 
 Content Intelligence
