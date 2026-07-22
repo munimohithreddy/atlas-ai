@@ -7,6 +7,7 @@ from app.repositories.campaign_repository import create_campaign, get_campaign_b
 from app.repositories.campaign_task_repository import create_campaign_tasks
 from app.services.campaigns.progress import CampaignProgressService
 from app.services.campaigns.assets import CampaignAssetPlanner
+from app.services.campaigns.formatting import campaign_name_for_plan
 from app.services.campaigns.tasks import CampaignTaskGenerator
 from app.services.campaigns.task_service import CampaignTaskService
 
@@ -53,7 +54,7 @@ class CampaignService:
         return campaign
 
     def _name_for_plan(self, business_plan) -> str:
-        return f"{business_plan.primary_monetization.title()} Campaign for {business_plan.opportunity.topic}"
+        return campaign_name_for_plan(business_plan)
 
     def _slug_for_plan(self, business_plan) -> str:
         base = f"{business_plan.opportunity.topic}-{business_plan.primary_monetization}-campaign"

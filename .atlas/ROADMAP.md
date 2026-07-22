@@ -28,6 +28,14 @@ Phase 4.3
 
 Asset Production Queue
 
+Phase 4.4
+
+Professional SaaS Workflow UI
+
+Phase 4.5
+
+Guided SaaS Product Experience
+
 Phase 5
 
 Content Intelligence

@@ -35,6 +35,57 @@ Out of scope:
 - Background workers.
 - Third-party integrations.
 
+## Sprint C3.5: Professional SaaS Workflow UI
+
+Goal: turn the founder dashboard into a professional operating workspace for moving from opportunity selection through business planning, campaign execution, task readiness, asset production, and publishing readiness.
+
+Scope:
+
+- Add a SaaS-style application shell with sidebar navigation, breadcrumbs, mobile navigation, and development environment indicator.
+- Add a dashboard summary with opportunity, plan, campaign, task, and asset counts.
+- Add workflow guidance, next-action messaging, attention items, and recent activity.
+- Expand opportunity and business-plan presentation with clear strategy, audience, monetization, acquisition, content, launch, and campaign actions.
+- Keep the campaign workspace focused with Overview, Tasks, Assets, and Activity tabs.
+- Group campaign assets by production stage while keeping the global production queue grouped by operational urgency.
+- Improve empty, loading, success, and error states without adding new backend behavior.
+
+Out of scope:
+
+- Authentication.
+- Billing.
+- Content generation.
+- Publishing integrations.
+- Scheduling.
+- Background workers.
+- New backend APIs.
+
+## Sprint C3.6: Guided SaaS Product Experience
+
+Goal: make Atlas understandable and operable for a first-time user without external explanation while preserving the business workflow from Opportunity to Ready to Publish.
+
+Scope:
+
+- Replace technical dashboard language with plain business language.
+- Add a first-run onboarding experience for an empty database.
+- Remove global Tasks and Assets navigation; keep them scoped inside the Campaign Workspace.
+- Add visible Opportunity -> Business Plan -> Campaign relationships.
+- Add human-readable enum formatting and generated campaign names.
+- Improve task and asset cards with descriptions, dependencies, valid actions, and lifecycle guidance.
+- Improve the global Production Queue with dropdown filters, clear filters, loading states, and campaign context links.
+- Fix task dependency readiness so only completed dependencies unlock downstream tasks.
+- Add a plain-language product glossary and manual clean-database acceptance flow.
+
+Out of scope:
+
+- AI content generation.
+- Website generation.
+- Publishing integrations.
+- Authentication.
+- Billing.
+- Analytics dashboards.
+- Revenue integrations.
+- New campaign lifecycle capabilities.
+
 ## Sprint 014: Campaign Foundation
 
 Goal: convert an approved BusinessPlan into a launch-ready Campaign with deterministic tasks, planned assets, revenue goals, and measurable campaign status.

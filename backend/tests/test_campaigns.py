@@ -200,6 +200,18 @@ class CampaignTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             CampaignService().create_campaign(db=db, business_plan_id=1, goal=None, priority=None, launch_target_date=None)
 
+    def test_generated_campaign_name_is_human_readable(self) -> None:
+        self.business_plan.primary_monetization = "display_ads"
+        db = FakeCampaignSession(self.business_plan)
+        campaign = CampaignService().create_campaign(
+            db=db,
+            business_plan_id=1,
+            goal=None,
+            priority=None,
+            launch_target_date=None,
+        )
+        self.assertEqual(campaign.name, "Best Espresso Machines Display Advertising Campaign")
+
     def test_expected_revenue_and_build_hours(self) -> None:
         db = FakeCampaignSession(self.business_plan)
         campaign = CampaignService().create_campaign(
@@ -234,6 +246,7 @@ class CampaignTests(unittest.TestCase):
         assets = CampaignAssetPlanner().plan(campaign, self.business_plan)
         self.assertTrue(any(asset.asset_type == "website" for asset in assets))
         self.assertTrue(any(asset.asset_type == "email_capture" for asset in assets))
+        self.assertTrue(all(asset.description for asset in assets))
 
     def test_create_campaign_asset(self) -> None:
         campaign = SimpleNamespace(id=1)
@@ -440,6 +453,15 @@ class CampaignTests(unittest.TestCase):
         self.assertEqual(completed.status, "completed")
         self.assertEqual(second.status, "ready")
 
+    def test_blocked_task_does_not_unlock_downstream_task(self) -> None:
+        campaign = SimpleNamespace(status="building", id=1)
+        first = SimpleNamespace(id=1, status="ready", campaign_id=1, depends_on_task_id=None, blocked_reason=None)
+        second = SimpleNamespace(id=2, status="pending", campaign_id=1, depends_on_task_id=1)
+        db = FakeCampaignSession(self.business_plan)
+        db.tasks.extend([first, second])
+        CampaignTaskService().block(db, campaign, first, "Waiting on approval")
+        self.assertEqual(second.status, "pending")
+
     def test_cancelled_dependency_unlock_behavior(self) -> None:
         campaign = SimpleNamespace(status="building", id=1)
         first = SimpleNamespace(id=1, status="ready", campaign_id=1, depends_on_task_id=None)
@@ -447,7 +469,7 @@ class CampaignTests(unittest.TestCase):
         db = FakeCampaignSession(self.business_plan)
         db.tasks.extend([first, second])
         CampaignTaskService().cancel(db, campaign, first)
-        self.assertEqual(second.status, "ready")
+        self.assertEqual(second.status, "pending")
 
     def test_archived_and_paused_restrictions(self) -> None:
         archived = SimpleNamespace(status="archived", id=1)

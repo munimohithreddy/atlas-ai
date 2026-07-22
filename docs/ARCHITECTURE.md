@@ -22,19 +22,30 @@ Sprint 012 adds CORS middleware in `app/main.py` for the local frontend origin `
 
 ## Frontend
 
-The frontend is a minimal Next.js App Router application under `frontend/`.
+The frontend is a Next.js App Router application under `frontend/`.
 
-The dashboard page:
+The dashboard page is the founder operating workspace. It includes:
 
-- accepts an optional niche,
-- accepts one topic per line,
-- trims input,
-- removes duplicate topics,
-- requires at least one non-empty topic,
-- calls `POST /api/v1/opportunities/portfolio`,
-- displays ranked opportunity results.
+- a SaaS-style app shell with sidebar navigation, breadcrumbs, mobile section navigation, and development environment indicator,
+- first-run onboarding when no opportunities, business plans, or campaigns exist,
+- optional niche and business-idea inputs for opportunity creation,
+- client-side topic trimming, de-duplication, and validation,
+- persisted opportunity creation through `POST /api/v1/opportunities/evaluate`,
+- portfolio results from `POST /api/v1/opportunities/portfolio`,
+- business-plan creation and strategy review,
+- campaign selection and a focused campaign workspace,
+- task readiness and asset production rollups,
+- the global asset production queue from `GET /api/v1/asset-production-queue`.
 
-The campaign workspace now presents campaign execution as a guided business flow with Overview, Tasks, Assets, and Activity tabs plus a grouped asset production queue. Statuses are translated into business-readable labels so the interface reads like an operating workspace instead of an admin console.
+The campaign workspace presents campaign execution as a guided business flow with Overview, Tasks, Assets, and Activity tabs. Tasks and Assets are intentionally scoped to the selected campaign and are not global sidebar destinations. Campaign assets are grouped by detailed production stage, while the global production queue remains grouped by operational urgency. Statuses are translated into business-readable labels so the interface reads like an operating workspace instead of an admin console.
+
+Workflow relationship display is handled in the frontend from currently available API fields:
+
+- Opportunity cards show linked business plans and campaigns when loaded.
+- Business Plan cards show their linked opportunity and campaigns.
+- Campaign cards show linked opportunity and business plan identifiers or loaded names.
+
+Critical lifecycle decisions remain backend-owned. For campaign tasks, only completed dependencies unlock downstream pending tasks; blocked or cancelled dependencies do not unlock dependents.
 
 The API base URL is configured through:
 
