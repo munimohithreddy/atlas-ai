@@ -375,6 +375,19 @@ Returns ordered campaign tasks.
 
 Returns planned campaign assets.
 
+### `GET /asset-production-queue`
+
+Returns the global production queue for campaign assets.
+
+Supported query filters:
+
+- `campaign_id`
+- `status`
+- `channel`
+- `asset_type`
+- `assigned_to`
+- `priority`
+
 ### `POST /campaigns/{campaign_id}/approve`
 
 Moves a campaign from planning to approved.

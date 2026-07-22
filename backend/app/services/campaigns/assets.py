@@ -27,13 +27,15 @@ class CampaignAssetPlanner:
         return [
             CampaignAsset(
                 campaign_id=campaign.id,
+                order_index=index,
                 asset_type=asset_type,
                 title=title,
                 channel=channel,
                 status="planned",
+                priority="medium",
                 planned_quantity=quantity,
                 generated_quantity=0,
                 published_quantity=0,
             )
-            for asset_type, title, channel, quantity in assets
+            for index, (asset_type, title, channel, quantity) in enumerate(assets, start=1)
         ]

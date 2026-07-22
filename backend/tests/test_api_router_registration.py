@@ -9,19 +9,23 @@ from app.api.v1.router import api_router  # noqa: E402
 
 class ApiRouterRegistrationTests(unittest.TestCase):
     def test_api_router_registers_health_and_opportunity_routes(self) -> None:
-        paths = {
-            route.path
-            for included_router in api_router.routes
-            for route in included_router.original_router.routes
-        }
+        paths = set()
+        for route in api_router.routes:
+            original_router = getattr(route, "original_router", None)
+            if original_router is not None:
+                paths.update(child_route.path for child_route in original_router.routes)
+            elif hasattr(route, "path"):
+                paths.add(route.path)
 
         self.assertIn("/health", paths)
+        self.assertIn("/asset-production-queue", paths)
         self.assertIn("/affiliate-programs", paths)
         self.assertIn("/affiliate-programs/{program_id}", paths)
         self.assertIn("/campaigns", paths)
         self.assertIn("/campaigns/{campaign_id}", paths)
         self.assertIn("/campaigns/{campaign_id}/tasks", paths)
         self.assertIn("/campaigns/{campaign_id}/assets", paths)
+        self.assertIn("/asset-production-queue", paths)
         self.assertIn("/campaigns/{campaign_id}/approve", paths)
         self.assertIn("/campaigns/{campaign_id}/repair-readiness", paths)
         self.assertIn("/campaigns/{campaign_id}/status", paths)

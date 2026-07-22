@@ -15,6 +15,17 @@ Scope:
 - Add tests for readiness, transitions, dependency unlocks, progress, and restrictions.
 - Support fractional actual hours on task completion with numeric persistence.
 
+## Sprint C3.1: Campaign Workspace Frontend Redesign
+
+Goal: make campaign execution understandable to non-technical users through guided tabs, business-readable labels, and a clearer asset production queue.
+
+Scope:
+
+- Redesign the campaign workspace into Overview, Tasks, Assets, and Activity tabs.
+- Add a prominent next-action panel and clearer campaign progress summaries.
+- Group assets and queue items by business stage with one primary action per item.
+- Translate technical statuses into business-friendly labels and guidance.
+
 Out of scope:
 
 - Content generation.

@@ -18,6 +18,18 @@ Changed:
 - Progress is derived from non-cancelled executable tasks.
 - Campaign readiness remains distinct from publication.
 
+## Sprint C3.1: Campaign Workspace Frontend Redesign
+
+Added:
+
+- Tabbed campaign workspace with Overview, Tasks, Assets, and Activity views.
+- Human-readable status labels, next-action panels, grouped assets, and grouped production queue sections.
+- Lightweight action guidance and contextual empty states for campaign work.
+
+Changed:
+
+- The frontend now reads campaign execution as a business workspace instead of a technical admin list.
+
 ## Sprint 014: Campaign Foundation
 
 Added:
