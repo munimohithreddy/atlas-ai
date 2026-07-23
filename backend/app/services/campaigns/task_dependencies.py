@@ -8,7 +8,7 @@ class CampaignTaskDependencyService:
         dependency = next((item for item in all_tasks if item.id == task.depends_on_task_id), None)
         if dependency is None:
             return False
-        return dependency.status in {"completed", "cancelled"}
+        return dependency.status == "completed"
 
     def validate(self, task: CampaignTask, all_tasks: list[CampaignTask]) -> None:
         if task.depends_on_task_id == task.id:

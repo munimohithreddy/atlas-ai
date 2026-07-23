@@ -30,6 +30,41 @@ Changed:
 
 - The frontend now reads campaign execution as a business workspace instead of a technical admin list.
 
+## Sprint C3.5: Professional SaaS Workflow UI
+
+Added:
+
+- SaaS-style application shell with sidebar navigation, breadcrumbs, mobile section navigation, and development environment indicator.
+- Founder dashboard summary metrics for opportunities, business plans, active campaigns, ready tasks, blocked tasks, and moving assets.
+- Workflow overview, next-action guidance, needs-attention list, success feedback, and recent activity rollups.
+- Dedicated business-plan section with audience, monetization, acquisition, content strategy, launch plan, revenue range, and campaign creation.
+- Selected-campaign task and asset rollups outside the detailed campaign tabs.
+
+Changed:
+
+- The frontend now presents Atlas as an operational workspace rather than a long mixed-function page.
+- Campaign assets are grouped by detailed production stage in the campaign view, while the global queue keeps its operational queue groups.
+
+## Sprint C3.6: Guided SaaS Product Experience
+
+Added:
+
+- First-run onboarding for empty workspaces.
+- Stored single-opportunity creation as the primary dashboard action.
+- Plain-language workflow indicator across dashboard, opportunity, business-plan, and campaign surfaces.
+- Business glossary in the Documentation section.
+- Production Queue dropdown filters, Clear Filters action, loading feedback, and campaign-context navigation.
+- Generated campaign-name formatter for readable campaign names.
+- Plain-language descriptions for generated campaign assets.
+
+Changed:
+
+- Removed global Tasks and Assets navigation; campaign tasks and assets now stay inside Campaign Workspace tabs.
+- Replaced technical dashboard language with business-friendly terms.
+- Task cards now omit empty dependencies, explain pending dependencies, and show only valid actions.
+- Asset cards now show purpose, type, channel, status, linked task, effort, and valid actions.
+- Cancelled task dependencies no longer unlock downstream tasks.
+
 ## Sprint 014: Campaign Foundation
 
 Added:

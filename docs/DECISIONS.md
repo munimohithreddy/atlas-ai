@@ -1,5 +1,37 @@
 # Atlas AI Decisions
 
+## Sprint C3.6: Guided SaaS Product Experience
+
+### Tasks and Assets are campaign-scoped navigation
+
+Tasks and Assets are no longer global sidebar destinations because they only have useful meaning within a selected campaign.
+
+### The primary dashboard action creates a stored Opportunity
+
+The old portfolio evaluation flow remains available as a secondary comparison action, but the main path now creates a persisted Opportunity so onboarding can progress through the real Atlas workflow.
+
+### Cancelled task dependencies do not unlock downstream tasks
+
+Only completed dependencies satisfy downstream readiness. Cancelling a dependency leaves dependent pending work waiting instead of silently creating an impossible launch path.
+
+### Activity is labelled as updates until event storage exists
+
+The frontend summarizes real campaign state as Recent Updates instead of inventing an activity history.
+
+## Sprint C3.5: Professional SaaS Workflow UI
+
+### The frontend remains a single founder workspace route
+
+Sprint C3.5 improves the operating model inside the existing dashboard route instead of adding premature route structure. The app shell, sidebar sections, and mobile navigation organize the workflow while preserving the existing API integration surface.
+
+### Dashboard sections follow the business workflow
+
+The primary navigation mirrors how a founder works: Dashboard, Opportunities, Business Plans, Campaigns, Tasks, Assets, Production Queue, Documentation, and Settings.
+
+### Asset stages differ from queue urgency groups
+
+Campaign asset views show detailed production stages. The global production queue keeps five operational groups so the queue remains focused on what needs action next.
+
 ## Sprint 015: Campaign Task Execution
 
 ### Campaign Tasks are the unit of execution

@@ -158,7 +158,9 @@ AssetStatus = Literal[
 ]
 
 AssetType = Literal[
+    "website",
     "homepage",
+    "analytics_setup",
     "buying_guide",
     "comparison_page",
     "product_review",
@@ -166,11 +168,15 @@ AssetType = Literal[
     "pinterest_pin",
     "youtube_short",
     "email",
+    "email_capture",
+    "lead_magnet",
+    "welcome_email",
+    "downloadable_resource",
     "landing_page",
     "social_post",
 ]
 
-AssetChannel = Literal["website", "pinterest", "youtube", "email", "social"]
+AssetChannel = Literal["website", "pinterest", "youtube", "email", "social", "internal"]
 
 AssetPriority = Literal["low", "medium", "high", "critical"]
 

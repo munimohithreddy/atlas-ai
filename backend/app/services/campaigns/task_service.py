@@ -104,8 +104,11 @@ class CampaignTaskService:
                     update_campaign_task(db, task)
                 continue
             dependency = next((item for item in all_tasks if item.id == task.depends_on_task_id), None)
-            if dependency and dependency.status in {"completed", "cancelled"} and task.status == "pending":
+            if dependency and dependency.status == "completed" and task.status == "pending":
                 task.status = "ready"
+                update_campaign_task(db, task)
+            elif dependency and dependency.status != "completed" and task.status == "ready":
+                task.status = "pending"
                 update_campaign_task(db, task)
         return all_tasks
 
@@ -133,6 +136,9 @@ class CampaignTaskService:
             if self.dependency_service.is_ready(downstream, tasks) and downstream.status == "pending":
                 downstream.status = "ready"
                 update_campaign_task(db, downstream)
+            elif not self.dependency_service.is_ready(downstream, tasks) and downstream.status == "ready":
+                downstream.status = "pending"
+                update_campaign_task(db, downstream)
 
     def _recalculate_campaign_status(self, db, campaign):
         tasks = list_campaign_tasks(db, campaign.id)
@@ -147,7 +153,7 @@ class CampaignTaskService:
             return
         tasks = list_campaign_tasks(db, task.campaign_id)
         dependency = next((item for item in tasks if item.id == task.depends_on_task_id), None)
-        if dependency is not None and dependency.status not in {"completed", "cancelled"}:
+        if dependency is not None and dependency.status != "completed":
             raise ValueError("Task dependencies are not ready.")
 
     def _recalculate_readiness(self, db, campaign, task):

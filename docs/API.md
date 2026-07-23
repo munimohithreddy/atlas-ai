@@ -342,6 +342,8 @@ Returns one business plan.
 
 Creates a deterministic campaign from an approved business plan.
 
+Generated campaign names use readable business language, such as `Standing Desk Display Advertising Campaign`, instead of exposing raw monetization enum values.
+
 Request:
 
 ```json
@@ -425,6 +427,8 @@ Moves a task into review.
 ### `POST /campaigns/{campaign_id}/tasks/{task_id}/complete`
 
 Completes a task and records completion data.
+
+Completing a task recalculates downstream readiness. Only completed dependencies unlock dependent pending tasks; blocked or cancelled dependencies do not unlock dependents.
 
 Request body:
 
